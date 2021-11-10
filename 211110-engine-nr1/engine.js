@@ -19,7 +19,7 @@ ngn.scale = function ({ width, height }) {
   console.log(ngn)
 }
 
-ngn.scale({ width: 100})
+ngn.scale({ height: 100})
 
 
 // SVG
@@ -44,20 +44,20 @@ ngn.makeSvgLayer = function ({ parent, id, x = 0, y = 0}) {
 
 ngn.makeSvgLine = function ({ parent, id, d = "", color = "#00ff00", stroke = 1, cap = "butt"}) {
   dom[id] = document.createElementNS(ngn.svgNameSpace, "path")
+  dom[id].id = id
   dom[id].setAttributeNS(null, "fill", "none")
   dom[id].setAttributeNS(null, "d", d)
   dom[id].setAttributeNS(null, "stroke-width", stroke * ngn.res)
   dom[id].setAttributeNS(null, "stroke", color)
   dom[id].setAttributeNS(null, "stroke-linecap", cap)
-  dom[id].id = id
   parent.appendChild(dom[id])
 }
 
 ngn.makeSvgShape = function ({ parent, id, d = "", color = "#00ff00" }) {
   dom[id] = document.createElementNS(ngn.svgNameSpace, "path")
+  dom[id].id = id
   dom[id].setAttributeNS(null, "fill", color)
   dom[id].setAttributeNS(null, "d", d)
-  dom[id].id = id
   parent.appendChild(dom[id])
 }
 
@@ -84,7 +84,7 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min) + min)
 }
 
-function makeRandomShape(nPoints) {
+function createRandomPoints(nPoints) {
   let points = []
   let px = getRandomInt(-ngn.width/2, ngn.width/2)
   let py = getRandomInt(-ngn.height/2, ngn.height/2)
@@ -96,6 +96,10 @@ function makeRandomShape(nPoints) {
   return points
 }
 
-ngn.makeSvgShape({ parent: dom.svgLayer, id: "randomShape", stroke: .5, d: ngn.svgPath(makeRandomShape(4)) })
+let colors = ["#ff0000", "#00ff00", "#0000ff"]
+
+for (let i = 0; i < 5; i++) {
+  ngn.makeSvgLine({ parent: dom.svgLayer, id: "randomShape" + i, stroke: Math.random(), d: ngn.svgPath(createRandomPoints(getRandomInt(3, 9))), color: colors[getRandomInt(0, colors.length)] })
+}
 
 
