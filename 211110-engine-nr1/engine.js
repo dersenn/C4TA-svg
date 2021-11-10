@@ -21,7 +21,6 @@ ngn.scale = function ({ width, height }) {
 
 ngn.scale({ height: 100})
 
-
 // SVG
 
 ngn.svgNameSpace = "http://www.w3.org/2000/svg"
@@ -98,8 +97,16 @@ function createRandomPoints(nPoints) {
 
 let colors = ["#ff0000", "#00ff00", "#0000ff"]
 
-for (let i = 0; i < 5; i++) {
-  ngn.makeSvgLine({ parent: dom.svgLayer, id: "randomShape" + i, stroke: Math.random(), d: ngn.svgPath(createRandomPoints(getRandomInt(3, 9))), color: colors[getRandomInt(0, colors.length)] })
+
+function drawPolygons(nPolygons) {
+  for (let i = 0; i < nPolygons; i++) {
+    ngn.makeSvgLine({ parent: dom.svgLayer, id: "randomShape" + i, stroke: Math.random(), d: ngn.svgPath(createRandomPoints(getRandomInt(3, 9))), color: colors[getRandomInt(0, colors.length)] })
+  }
 }
+
+drawPolygons(getRandomInt(1,20))
+
+/* ATTEMPT TO ANIMATE IT... */
+// window.setInterval(drawPolygons(5),3000)
 
 
