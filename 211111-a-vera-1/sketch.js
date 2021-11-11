@@ -12,29 +12,38 @@ function coinToss(chance) {
   }
 }
 
+function drawCenterGrid() {
+  ngn.makeSvgLine({ parent: dom.svgLayer, stroke: .1, d: ngn.svgPath([{x: 0, y: ngn.height/2}, {x: 0, y: -ngn.height/2}]), color: "#0ff" })
+  ngn.makeSvgLine({ parent: dom.svgLayer, stroke: .1, d: ngn.svgPath([{x: -ngn.width/2, y: 0}, {x: ngn.width/2, y: 0}]), color: "#0ff" })
+}
+
 let colors = ["#ff0000", "#00ff00", "#0000ff"]
 
 
 
 // VERA 1
 
-function vera1(xPos, yPos, w, h) {
-  let cols = 3
+// needs work on the "border". should stay the same... no matter how many divisions.
+
+function vera1(xPos, yPos, w, h, divs) {
+  let cols = divs
   let rows = cols
+
+  let overlap = 3 // meaning a third
 
   let tileW = w / cols
   let tileH = h / rows
 
-  let xOverlap = tileW / 3
-  let yOverlap = tileH / 3
+  let xOverlap = tileW / overlap
+  let yOverlap = tileH / overlap
 
-  xPos += ((rows - 1) * xOverlap) /2
-  yPos += ((cols - 1) * yOverlap) /2
+  xPos += (cols - 1) * (xOverlap/2)
+  yPos += (rows - 1) * (yOverlap/2)
 
   for (let x = 0; x < cols; x++) {
-    let xOff = xPos + x * tileW - xOverlap
+    let xOff = xPos + x * (tileW - xOverlap)
     for (let y = 0; y < rows; y++) {
-      let yOff = yPos + y * tileH - yOverlap
+      let yOff = yPos + y * (tileH - yOverlap)
 
       drawVeraElement(xOff, yOff, tileW, tileH)
     }
@@ -54,7 +63,7 @@ function vera1(xPos, yPos, w, h) {
 
 // DRAW
 
-ngn.makeSvgLine({ parent: dom.svgLayer, stroke: .1, d: ngn.svgPath([{x: 0, y: ngn.height/2}, {x: 0, y: -ngn.height/2}]), color: "#0ff" })
+// drawCenterGrid()
 
-vera1(-ngn.width/2, -ngn.height/2, ngn.width, ngn.height)
+vera1(-ngn.min/2, -ngn.min/2, ngn.min, ngn.min, 12)
 
