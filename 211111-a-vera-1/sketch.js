@@ -58,7 +58,7 @@ function vera1(xPos, yPos, w, h, divs) {
       [{x: xPos, y: yPos + h/2},{x: xPos + w, y: yPos + h/2}]
      ]
 
-    ngn.makeSvgLine({ parent: dom.svgLayer, id: "vera1_", stroke: .5, d: ngn.svgPath(positions[getRandomInt(0, positions.length)]), color: colors[getRandomInt(0, colors.length)] })
+    ngn.makeSvgLine({ parent: dom.svgLayer, id: "vera1_", stroke: .2, d: ngn.svgPath(positions[getRandomInt(0, positions.length)]), color: colors[getRandomInt(0, colors.length)] })
   }
 }
 
