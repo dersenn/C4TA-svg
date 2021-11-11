@@ -1,7 +1,8 @@
 // ENGINE
 
 let ngn = {}
-
+// can i make this a class somehow? or enclosed in a function?
+// like p5 setup() and draw()
 
 // COORDINATES
 
@@ -22,7 +23,8 @@ ngn.scale = function ({ width, height }) {
 }
 
 ngn.scale({ height: 100})
-
+// possibly use window dimensions?
+// and some kind of mapping...
 
 // SVG
 
@@ -76,40 +78,4 @@ dom.stage.id = "stage"
 document.body.appendChild(dom.stage)
 
 ngn.makeSvgLayer({ parent: dom.stage, id: "svgLayer", x: 0, y: 0})
-
-
-// DO STUFF
-
-function getRandomInt(min, max) {
-  min = Math.ceil(min)
-  max = Math.floor(max)
-  return Math.floor(Math.random() * (max - min) + min)
-}
-
-function createRandomPoints(nPoints) {
-  let points = []
-  let px = getRandomInt(-ngn.width/2, ngn.width/2)
-  let py = getRandomInt(-ngn.height/2, ngn.height/2)
-  for (let i = 0; i < nPoints; i++) {
-    points.push({x: px, y: py})
-    px = getRandomInt(-ngn.width/2, ngn.width/2)
-    py = getRandomInt(-ngn.height/2, ngn.height/2)
-  }
-  return points
-}
-
-let colors = ["#ff0000", "#00ff00", "#0000ff"]
-
-
-function drawPolygons(nPolygons) {
-  for (let i = 0; i < nPolygons; i++) {
-    ngn.makeSvgLine({ parent: dom.svgLayer, id: "randomShape" + i, stroke: Math.random(), d: ngn.svgPath(createRandomPoints(getRandomInt(3, 9))), color: colors[getRandomInt(0, colors.length)] })
-  }
-}
-
-drawPolygons(getRandomInt(1,20))
-
-/* ATTEMPT TO ANIMATE IT... */
-// window.setInterval(drawPolygons(5),3000)
-
 
