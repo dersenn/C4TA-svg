@@ -24,6 +24,7 @@ let colors = ["#ff0000", "#00ff00", "#0000ff"]
 // VERA 1
 
 // needs work on the "border". should stay the same... no matter how many divisions.
+// maybe has to do with that ngn.scale thing...
 
 function vera1(xPos, yPos, w, h, divs) {
   let cols = divs
@@ -63,7 +64,7 @@ function vera1(xPos, yPos, w, h, divs) {
 
 // DRAW
 
-// drawCenterGrid()
+drawCenterGrid()
 
 vera1(-ngn.min/2, -ngn.min/2, ngn.min, ngn.min, 12)
 
