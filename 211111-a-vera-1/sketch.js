@@ -26,20 +26,21 @@ let colors = ["#ff0000", "#00ff00", "#0000ff"]
 // needs work on the "border". should stay the same... no matter how many divisions.
 // maybe has to do with that ngn.scale thing...
 
-function vera1(xPos, yPos, w, h, divs) {
-  let cols = divs
+function vera1(xPos, yPos, w, h, divisions) {
+  let cols = divisions
   let rows = cols
 
-  let overlap = 3 // meaning a third
+  let o = 3 // meaning tiles overlap by a third
 
-  let tileW = w / cols
-  let tileH = h / rows
+  // those have been calculated by some solving of problems in calculations.js.
+  let tileW = ( w * o ) / ( -cols + 3 + cols * o ) 
+  let tileH = ( h * o ) / ( -rows + 3 + rows * o )
 
-  let xOverlap = tileW / overlap
-  let yOverlap = tileH / overlap
+  let xOverlap = tileW / o
+  let yOverlap = tileH / o
 
-  xPos += (cols - 1) * (xOverlap/2)
-  yPos += (rows - 1) * (yOverlap/2)
+  xPos += xOverlap
+  yPos += yOverlap
 
   for (let x = 0; x < cols; x++) {
     let xOff = xPos + x * (tileW - xOverlap)
@@ -62,7 +63,7 @@ function vera1(xPos, yPos, w, h, divs) {
   }
 }
 
-// DRAW
+// DRAW STUFF
 
 drawCenterGrid()
 
