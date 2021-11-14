@@ -7,7 +7,7 @@ function vera2(xPos, yPos, w, h, cols, rows) {
   // those have been calculated by some solving of problems in calculations.js.
   let tileW = ( w * o ) / ( -cols + 3 + cols * o ) 
   // let tileH = ( h * o ) / ( -rows + 3 + rows * o )
-  let tileH = getRandomInt(0, h / rows)
+  let tileH = ( h * o ) / ( -rows + 3 + rows * o )
 
 
   let xOverlap = tileW / o
@@ -20,8 +20,9 @@ function vera2(xPos, yPos, w, h, cols, rows) {
     let xOff = xPos + x * (tileW - xOverlap)
     for (let y = 0; y < rows; y++) {
       let yOff = yPos + y * (getRandomInt(0, h / rows))
+      // let yOff = yPos + y * (Math.random() * tileH)
 
-      drawVeraElement(xOff, yOff, tileW, tileH)
+      drawVeraElement(xOff, yOff, tileW, Math.random() * tileH)
     }
   }
 
@@ -39,6 +40,7 @@ function vera2(xPos, yPos, w, h, cols, rows) {
      ]
 
 
-    ngn.makeSvgLine({ parent: dom.svgLayer, id: "vera1_", stroke: .2, d: ngn.svgPath(positions[getRandomInt(0, positions.length)]), color: "#000" })
+    // ngn.makeSvgLine({ parent: dom.svgLayer, id: "vera1_", stroke: .2, d: ngn.svgPath(positions[getRandomInt(0, positions.length)]), color: colors[getRandomInt(0, colors.length)] })
+    ngn.makeSvgLine({ parent: dom.svgLayer, id: "vera1_", stroke: .2, d: ngn.svgPath(positions[getRandomInt(0, positions.length)]), color: colors[0] })
   }
 }
