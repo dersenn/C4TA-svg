@@ -23,8 +23,8 @@ let colors = ["#ff0000", "#00ff00", "#0000ff"]
 
 // drawCenterGrid()
 
-vera2(-ngn.min/2, -ngn.min/2, ngn.min, ngn.min, 12, 12)
-vera1(-ngn.min/2, -ngn.min/2, ngn.min, ngn.min, 12)
+// vera2(-ngn.min/2, -ngn.min/2, ngn.min, ngn.min, 12, 12)
+vera1(-ngn.min/2, -ngn.min/2, ngn.min, ngn.min, 1)
 
 // let nSketches = 2
 

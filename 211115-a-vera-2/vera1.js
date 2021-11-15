@@ -26,14 +26,26 @@ function vera1(xPos, yPos, w, h, divisions) {
   }
 
   function drawVeraElement(xPos, yPos, w, h) {
-    let positions = [
-      [{x: xPos, y: yPos},{x: xPos + w, y: yPos + h}],
-      [{x: xPos, y: yPos + h},{x: xPos + w, y: yPos}],
-      [{x: xPos + w/2, y: yPos},{x: xPos + w/2, y: yPos + h}],
-      [{x: xPos, y: yPos + h/2},{x: xPos + w, y: yPos + h/2}]
-     ]
+    let rotations = [ radians(0), radians(45), radians(90) ]
+    let points = []
 
-    // ngn.makeSvgLine({ parent: dom.svgLayer, id: "vera1_", stroke: .2, d: ngn.svgPath(positions[getRandomInt(0, positions.length)]), color: colors[getRandomInt(0, colors.length)] })
+    for ( let r = 0; r < rotations.length; r++ ) {
+      let A = {x: xPos, y: yPos}
+      let d = Math.tan(rotations[r]) * w/2
+      // let B = {x: cos(rotations)}
+      // points.push()
+    }
+
+
+
+    // now calculate this with cos etc...
+    // let positions = [
+    //   [{x: xPos, y: yPos},{x: xPos + w, y: yPos + h}],
+    //   [{x: xPos, y: yPos + h},{x: xPos + w, y: yPos}],
+    //   [{x: xPos + w/2, y: yPos},{x: xPos + w/2, y: yPos + h}],
+    //   [{x: xPos, y: yPos + h/2},{x: xPos + w, y: yPos + h/2}]
+    //  ]
+
     ngn.makeSvgLine({ parent: dom.svgLayer, id: "vera1_", stroke: .2, d: ngn.svgPath(positions[getRandomInt(0, positions.length)]), color: colors[2] })
   }
 }
