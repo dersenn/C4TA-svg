@@ -18,8 +18,8 @@
             height: 100%;
             font-size: 0;
             font-family: sans-serif;
-            color: #fff;
-            background-color: #000;
+            color: #000;
+            background-color: #fff;
             user-select: none;
         }
 
@@ -147,33 +147,57 @@
         // write funciton analogue to p5 map function
     }
 
+    function getRandomInt(min, max) {
+        min = Math.ceil(min)
+        max = Math.floor(max)
+        return Math.floor(Math.random() * (max - min) + min)
+    }
+
+    function radians(degrees) {
+      return degrees * (Math.PI/180);
+    }
 
     //drawing
     for (let i = 0; i < 1000; i++) {
 
-        let rotation
-        let col
+        let angle = 90
+        let col = "#0f0"
+        let stroke = 0.3
 
         let lineCenter = { x: (-1 + Math.random() * 2) * 50, y: (-1 + Math.random() * 2) * 50 }
         let stageCenter = {x: 0, y: 0}
 
-        if (getDistance(stageCenter, lineCenter) < 40) {
-            rotation = Math.random() * Math.PI
-            col = "#0f0"
+
+        if (lineCenter.y < -20) {
+            angle = getRandomInt(160, 200)
+            stroke = 0.7
+        } else if (lineCenter.y > 40) {
+            angle = getRandomInt(60, 120) 
+        } else if (lineCenter.x < -40 || lineCenter.x > 40) {
+            angle = getRandomInt(160, 200)
+            stroke = 0.7
         } else {
-            rotation = Math.random() * Math.PI/6 
-            if (Math.random() < .5) {
-                rotation * -1
-            }
-            col = "#ff0"
-       }
+            angle = Math.random() * 360
+            stroke = 1.5
+        }
+
+       //  if (getDistance(stageCenter, lineCenter) < 50) {
+       //      angle = Math.random() * Math.PI
+       //      col = "#0f0"
+       //  } else {
+       //      angle = Math.random() * Math.PI/6
+       //      if (Math.random() < .5) {
+       //          angle *= -1
+       //      }
+       //      col = "#ff0"
+       // }
 
 
         let line = lineRotation({
             stageCenter: stageCenter,
             center: lineCenter,
-            rotation: rotation,
-            radius: 10
+            rotation: radians(angle),
+            radius: 7
         });
 
         let path = svg.path(line);
@@ -182,8 +206,8 @@
             id: "line_" + i, 
             parent: dom.svgLayer, 
             cap: "round", 
-            stroke: 0.5, 
-            color: col, 
+            stroke: stroke, 
+            color: "#000", 
             d: path
         });
     }

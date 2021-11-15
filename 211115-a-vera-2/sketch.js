@@ -17,6 +17,12 @@ function drawCenterGrid() {
   ngn.makeSvgLine({ parent: dom.svgLayer, stroke: .1, d: ngn.svgPath([{x: -ngn.width/2, y: 0}, {x: ngn.width/2, y: 0}]), color: "#0ff" })
 }
 
+function radians(degrees) {
+  var pi = Math.PI;
+  return degrees * (pi/180);
+}
+
+
 let colors = ["#ff0000", "#00ff00", "#0000ff"]
 
 // DRAW STUFF
