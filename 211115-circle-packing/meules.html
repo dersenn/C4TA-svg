@@ -1,0 +1,187 @@
+<!doctype html>
+<html>
+
+<head>
+
+    <title>mesh</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+
+    <script language="javascript" type="text/javascript" src="simplex-noise.min.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-size: 0;
+            font-family: sans-serif;
+            color: #fff;
+            background-color: #000;
+            user-select: none;
+        }
+
+        stage,
+        svg,
+        path {
+            position: fixed;
+            overflow: visible;
+        }
+    </style>
+
+</head>
+
+<body>
+</body>
+
+<script>
+
+    //CODE
+
+    let twrk = {};
+
+
+    //COORDINATES
+
+    twrk.scale = function ({ width, height }) {
+        if (width) {
+            twrk.width = width;
+            twrk.res = window.innerWidth / twrk.width;
+            twrk.height = window.innerHeight / twrk.res;
+        } else if (height) {
+            twrk.height = height;
+            twrk.res = window.innerHeight / twrk.height;
+            twrk.width = window.innerWidth / twrk.res;
+        }
+        twrk.center = { x: twrk.width / 2, y: twrk.height / 2 };
+    }
+    twrk.scale({ height: 120 });
+
+
+    //SVG
+
+    let svg = {};
+
+    svg.nameSpace = "http://www.w3.org/2000/svg";
+
+    svg.path = function (ia) {
+        let output = "M ";
+        for (var i = 0; i < ia.length; i++) {
+            output += ia[i].x * twrk.res + " " + ia[i].y * twrk.res + " ";
+        }
+        output += "z";
+        return output;
+    };
+
+    svg.makeLayer = function ({ parent, id, x = 0, y = 0 }) {
+        dom[id] = document.createElementNS(svg.nameSpace, "svg");
+        dom[id].id = id;
+        dom[id].style.transform = "translateX(" + (x * twrk.res) + "px) translateY(" + (y * twrk.res) + "px)";
+        parent.appendChild(dom[id]);
+    };
+
+    svg.makeLine = function ({ parent, id, d = "", color = "#ff00ff", stroke = 1, cap = "butt", join = "round" }) {
+        dom[id] = document.createElementNS(svg.nameSpace, "path");
+        dom[id].setAttributeNS(null, "fill", "none");
+        dom[id].setAttributeNS(null, "d", d);
+        dom[id].setAttributeNS(null, "stroke-width", stroke * twrk.res);
+        dom[id].setAttributeNS(null, "stroke", color);
+        dom[id].setAttributeNS(null, "stroke-linecap", cap);
+        dom[id].setAttributeNS(null, "stroke-join", join);
+        dom[id].id = id;
+        parent.appendChild(dom[id]);
+    };
+
+    svg.makeShape = function ({ parent, id, d = "", color = "#ff00ff" }) {
+        dom[id] = document.createElementNS(svg.nameSpace, "path");
+        dom[id].setAttributeNS(null, "fill", color);
+        dom[id].setAttributeNS(null, "d", d);
+        dom[id].id = id;
+        parent.appendChild(dom[id]);
+    };
+
+    //drehung
+    lineRotation = function ({ stageCenter, center, radius, rotation }) {
+
+        // console.log(getDistance(stageCenter, center)/100)
+
+        // interesting!
+        // rotation = (getDistance(stageCenter, center)/100) * (Math.PI * 2)
+
+        // if (getDistance(stageCenter, center) < 40) {
+        //     rotation = Math.random() * Math.PI
+        // } else {
+        //     rotation = Math.random() * Math.PI/6
+        // }
+
+        return [
+            { x: center.x + Math.sin(rotation) * radius, y: center.y + Math.cos(rotation) * radius },
+            { x: center.x - Math.sin(rotation) * radius, y: center.y - Math.cos(rotation) * radius }
+        ];
+    };
+
+    //DOM
+
+    let dom = {};
+
+    //stage
+    dom.stage = document.createElement("stage");
+    dom.stage.style.transform = "translateX(" + (twrk.center.x * twrk.res) + "px) translateY(" + (twrk.center.y * twrk.res) + "px)";
+    dom.stage.id = "stage";
+    document.body.appendChild(dom.stage);
+
+    //svg layer
+    svg.makeLayer({ parent: dom.stage, id: "svgLayer", x: 0, y: 0 });
+
+
+
+    function getDistance(a, b) {
+        var aa = a.x - b.x;
+        var bb = a.y - b.y;
+        return Math.round(Math.sqrt(aa * aa + bb * bb) * 100) / 100;
+    }
+
+
+    //drawing
+    for (let i = 0; i < 1000; i++) {
+
+        let rotation
+        let col
+
+        let lineCenter = { x: (-1 + Math.random() * 2) * 50, y: (-1 + Math.random() * 2) * 50 }
+        let stageCenter = {x: 0, y: 0}
+
+        if (getDistance(stageCenter, lineCenter) < 40) {
+            rotation = Math.random() * Math.PI
+            col = "#0f0"
+        } else {
+            rotation = Math.random() * Math.PI/6
+            col = "#ff0"
+       }
+
+
+        let line = lineRotation({
+            stageCenter: stageCenter,
+            center: lineCenter,
+            rotation: rotation,
+            radius: 10
+        });
+
+        let path = svg.path(line);
+
+        svg.makeLine({
+            id: "line_" + i, 
+            parent: dom.svgLayer, 
+            cap: "round", 
+            stroke: 0.5, 
+            color: col, 
+            d: path
+        });
+    }
+
+
+</script>
+
+</html>
