@@ -19,16 +19,8 @@ function drawCenterGrid() {
 
 let colors = ["#ff0000", "#00ff00", "#0000ff"]
 
+
 // DRAW STUFF
 
-// drawCenterGrid()
+packing(-ngn.min/2, -ngn.min/2, ngn.min, ngn.min, 1)
 
-// vera2(-ngn.min/2, -ngn.min/2, ngn.min, ngn.min, 12, 12)
-vera1(-ngn.min/2, -ngn.min/2, ngn.min, ngn.min, 1)
-
-// let nSketches = 2
-
-// for (let x = 0; x < nSketches; x++) {
-//   let tileW = ngn.width / nSketches
-//   let xOff = x * tileW
-// }
