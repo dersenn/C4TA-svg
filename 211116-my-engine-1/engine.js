@@ -1,5 +1,30 @@
 // ENGINE
 
+/*IDEAS*/
+
+// maybe make classes?
+// should try to find out benefits of obj.literals vs. classes.
+// or how to mix them.
+
+// —— dom (probably not, as it is very static)
+// —— engine
+// —— svg
+
+// difficult to separate engine from svg. maybe svg is part of engine?
+
+// ENGINE
+// —— rewrite that scale thing. it's opposed to my logic. i start from the container.
+
+
+// SVG
+// –– svg <g> (group) element?
+// –– path constructor including line, arc and bezier (push points with arguments)
+// –– create multiple svgs
+
+// and so on...
+
+
+
 let ngn = {}
 // can i make this a class somehow? or enclosed in a function?
 // like p5 setup() and draw()

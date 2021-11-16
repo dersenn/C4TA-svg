@@ -14,24 +14,28 @@
 
 <body>
 
-
+<!-- silence is golden -->
 
 </body>
 
-
+<!-- the basics -->
 <script src="engine.js"></script>
+<script src="basefunctions.js"></script>
+
+<!-- the individual sketches/classes/functions -->
 <script src="vera1.js"></script>
-<script src="vera2.js"></script>
 
-
+<!-- the setup and drawing -->
 <script src="sketch.js"></script>
 
+
 <script>
-  // use current directory name as title for the site
+  // use current directory name as title for the site.
+  // self executing function.
   (function() {
-      var location = window.location.pathname;
-      var path = location.substring(0, location.lastIndexOf("/"));
-      var directoryName = path.substring(path.lastIndexOf("/")+1);
+      let location = window.location.pathname
+      let path = location.substring(0, location.lastIndexOf("/"))
+      let directoryName = path.substring(path.lastIndexOf("/")+1)
       document.title = directoryName
   })();
 </script>

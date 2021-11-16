@@ -39,12 +39,12 @@ function vera1(xPos, yPos, w, h, divisions) {
 
 
     // now calculate this with cos etc...
-    // let positions = [
-    //   [{x: xPos, y: yPos},{x: xPos + w, y: yPos + h}],
-    //   [{x: xPos, y: yPos + h},{x: xPos + w, y: yPos}],
-    //   [{x: xPos + w/2, y: yPos},{x: xPos + w/2, y: yPos + h}],
-    //   [{x: xPos, y: yPos + h/2},{x: xPos + w, y: yPos + h/2}]
-    //  ]
+    let positions = [
+      [{x: xPos, y: yPos},{x: xPos + w, y: yPos + h}],
+      [{x: xPos, y: yPos + h},{x: xPos + w, y: yPos}],
+      [{x: xPos + w/2, y: yPos},{x: xPos + w/2, y: yPos + h}],
+      [{x: xPos, y: yPos + h/2},{x: xPos + w, y: yPos + h/2}]
+     ]
 
     ngn.makeSvgLine({ parent: dom.svgLayer, id: "vera1_", stroke: .2, d: ngn.svgPath(positions[getRandomInt(0, positions.length)]), color: colors[2] })
   }
