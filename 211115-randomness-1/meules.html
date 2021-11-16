@@ -181,7 +181,6 @@
         // }
         ///////////////////////////////
 
-
         // STRICT CIRCLE STACK
         //  if (getDistance(stageCenter, lineCenter) < 50) {
         //      angle = Math.random() * 180
@@ -195,7 +194,6 @@
         // }
         ///////////////////////////////
 
-
         // FLOW???
         // let dist = getDistance(stageCenter, lineCenter)
         // if (Math.random() < .5) {
@@ -203,7 +201,6 @@
         // }
         // angle = mapValues(dist, 0, 50, 90, 0)
         ///////////////////////////////
-
 
         // FLUID CIRCLE STACK
         let flip
@@ -216,11 +213,12 @@
         angle = flip * getRandomInt(0, mapValues(dist, 0, Math.sqrt(60**2), 360, 0))
         let colval = mapValues(dist, 0, Math.sqrt(60**2), 255, 20)
         col = "rgb(0," + colval + ",0)"
-        stroke = mapValues(dist, 0, Math.sqrt(60**2), .2, .6)
+        stroke = mapValues(dist, 0, Math.sqrt(60**2), .2, .9)
         ///////////////////////////////
 
 
 
+        // DRAW STUFF
         let line = lineRotation({
             stageCenter: stageCenter,
             center: lineCenter,
