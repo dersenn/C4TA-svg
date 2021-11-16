@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+
+  <meta name="author" content="Christoph Senn">
+  <meta name="description" content="Adventures in SVG">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+
+
+</body>
+
+
+<script src="engine.js"></script>
+<script src="vera1.js"></script>
+<script src="vera2.js"></script>
+
+
+<script src="sketch.js"></script>
+
+<script>
+  // use current directory name as title for the site
+  (function() {
+      var location = window.location.pathname;
+      var path = location.substring(0, location.lastIndexOf("/"));
+      var directoryName = path.substring(path.lastIndexOf("/")+1);
+      document.title = directoryName
+  })();
+</script>
+
+</html>
