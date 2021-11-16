@@ -37,7 +37,6 @@ function vera1(xPos, yPos, w, h, divisions) {
     }
 
 
-
     // now calculate this with cos etc...
     let positions = [
       [{x: xPos, y: yPos},{x: xPos + w, y: yPos + h}],
