@@ -51,44 +51,59 @@ ngn.scale({ height: 100})
 // possibly use window dimensions?
 // and some kind of mapping...
 
+
 // SVG
 
-ngn.svgNameSpace = "http://www.w3.org/2000/svg"
+let svg = {};
 
-ngn.svgPath = function (arr) {
-  let output = "M "
-  for (let i = 0; i < arr.length; i++) {
-    output += arr[i].x * ngn.res + " " + arr[i].y * ngn.res + " "
+svg.nameSpace = "http://www.w3.org/2000/svg";
+
+svg.path = function (ia, close) {
+    let output = "M ";
+    for (var i = 0; i < ia.length; i++) {
+        output += ia[i].x * ngn.res + " " + ia[i].y * ngn.res + " ";
+    }
+    if (close) {
+      output += "z";
+    }
+
+    return output;
+};
+
+svg.paths = function (ia) {
+  let output = "";
+  for (var i = 0; i < ia.length; i++) {
+      output += svg.path(ia[i]);
   }
-  output += "Z"
-  return output
-}
+  return output;
+};
 
-ngn.makeSvgLayer = function ({ parent, id, x = 0, y = 0}) {
-  dom[id] = document.createElementNS(ngn.svgNameSpace, "svg")
-  dom[id].id = id
-  dom[id].style.transform = "translateX(" + (x * ngn.res) + "px) translateY(" + (y * ngn.res) + "px)"
-  parent.appendChild(dom[id])
-}
+svg.makeLayer = function ({ parent, id, x = 0, y = 0 }) {
+    dom[id] = document.createElementNS(svg.nameSpace, "svg");
+    dom[id].id = id;
+    dom[id].style.transform = "translateX(" + (x * ngn.res) + "px) translateY(" + (y * ngn.res) + "px)";
+    parent.appendChild(dom[id]);
+};
 
-ngn.makeSvgLine = function ({ parent, id, d = "", color = "#00ff00", stroke = 1, cap = "butt"}) {
-  dom[id] = document.createElementNS(ngn.svgNameSpace, "path")
-  dom[id].id = id
-  dom[id].setAttributeNS(null, "fill", "none")
-  dom[id].setAttributeNS(null, "d", d)
-  dom[id].setAttributeNS(null, "stroke-width", stroke * ngn.res)
-  dom[id].setAttributeNS(null, "stroke", color)
-  dom[id].setAttributeNS(null, "stroke-linecap", cap)
-  parent.appendChild(dom[id])
-}
+svg.makeLine = function ({ parent, id, d = "", color = "#ff00ff", stroke = 1, cap = "round", join = "round" }) {
+    dom[id] = document.createElementNS(svg.nameSpace, "path");
+    dom[id].setAttributeNS(null, "fill", "none");
+    dom[id].setAttributeNS(null, "d", d);
+    dom[id].setAttributeNS(null, "stroke-width", stroke * ngn.res);
+    dom[id].setAttributeNS(null, "stroke", color);
+    dom[id].setAttributeNS(null, "stroke-linecap", cap);
+    dom[id].setAttributeNS(null, "stroke-linejoin", join);
+    dom[id].id = id;
+    parent.appendChild(dom[id]);
+};
 
-ngn.makeSvgShape = function ({ parent, id, d = "", color = "#00ff00" }) {
-  dom[id] = document.createElementNS(ngn.svgNameSpace, "path")
-  dom[id].id = id
-  dom[id].setAttributeNS(null, "fill", color)
-  dom[id].setAttributeNS(null, "d", d)
-  parent.appendChild(dom[id])
-}
+svg.makeShape = function ({ parent, id, d = "", color = "#ff00ff" }) {
+    dom[id] = document.createElementNS(svg.nameSpace, "path");
+    dom[id].setAttributeNS(null, "fill", color);
+    dom[id].setAttributeNS(null, "d", d);
+    dom[id].id = id;
+    parent.appendChild(dom[id]);
+};
 
 
 // DOM
@@ -102,5 +117,5 @@ dom.stage.id = "stage"
 
 document.body.appendChild(dom.stage)
 
-ngn.makeSvgLayer({ parent: dom.stage, id: "svgLayer", x: 0, y: 0})
+svg.makeLayer({ parent: dom.stage, id: "svgLayer", x: 0, y: 0})
 
