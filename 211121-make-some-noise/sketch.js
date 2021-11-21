@@ -1,5 +1,6 @@
 // SETUP STUFF
 
+
 //drehung
 lineRotation = function ({ point, long, rotation }) {
     return [
@@ -14,48 +15,57 @@ let simplex = new SimplexNoise();
 
 // DRAW STUFF
 
-let nCols = 500
-let nRows = 3
+let nCols = 100
+let nRows = 10
 let step = {x: ngn.width/nCols, y: ngn.height/nRows}
 // let position = { x: -ngn.width/2 + step.x/2, y: -ngn.height/2 + step.y/2}
-let position = { x: -ngn.width/2 + step.x/2, y: -ngn.height/2 + step.x/2}
+let position = { x: -ngn.width/2 + step.x/2, y: -ngn.height/2 + step.y/2}
 
 
-for (let lines = 0; lines < nRows; lines++) {
-  svg.makeLine({
-    parent: dom.svgLayer, 
-    id: "wave" + lines,
-    cap: "round", 
-    stroke: 1, 
-    color: "#000", 
-    d: ""
-    // d: svg.path(points, false)
-  });
-}
+svg.makeLine({
+  parent: dom.svgLayer, 
+  id: "wave",
+  cap: "round", 
+  stroke: .3, 
+  color: "#000", 
+  d: ""
+  // d: svg.path(points, false)
+});
 
 
 
-let resolution = .1
-let amp = .0003
-let speed = .0001
+let resolution = .05
+let speed = .0003
 
-function loop(time) {
-  let points = []
+let i = 0
 
+
+let loop1 = function loop(time) {
+
+  // let test = simplex.noise2D(i , resolution * time)
+  // console.log(Math.floor(mapValues(test, -1, 1, 0, 100)))
+
+  let lines = []
   for (let y = 0; y < nRows; y++) {
+    let points = []
     let yOff = position.y + y * step.y
     for (let x = 0; x < nCols; x++) {
-      yOff = yOff + (simplex.noise3D(step.y/10, x * resolution / 10, time * speed) * step.y / 100)
-      points.push({x: position.x + x * step.x, y: yOff})
+      let ampY = simplex.noise3D(x * resolution, y * resolution, time * speed)
+      yOff += (mapValues(ampY, -1, 1, -step.y/2, step.y/2))
+      let xOff = position.x + x * step.x
+      points.push({x: xOff, y: yOff})
     }
+    lines.push(points)
   }
-  // console.log(points)
 
-  for (let y = 0; y < nRows; y++) {
-    dom["wave" + y].setAttributeNS(null, "d", svg.path(points, false));
-  }
+  let col = simplex.noise2D(time/1000, 0)
+  col = mapValues(col, -1, 1, 0, 255)
+
+  dom["wave"].setAttributeNS(null, "d", svg.paths(lines));
+  dom["wave"].setAttributeNS(null, "stroke", rgbToHex(0,col,0))
 
   requestAnimationFrame(loop)
+  // i += 1
 }
 
-loop(0)
+loop1(0)

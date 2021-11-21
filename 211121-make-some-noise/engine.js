@@ -58,7 +58,7 @@ let svg = {};
 
 svg.nameSpace = "http://www.w3.org/2000/svg";
 
-svg.path = function (ia, close) {
+svg.path = function (ia, close = false) {
     let output = "M ";
     for (var i = 0; i < ia.length; i++) {
         output += ia[i].x * ngn.res + " " + ia[i].y * ngn.res + " ";
@@ -70,10 +70,10 @@ svg.path = function (ia, close) {
     return output;
 };
 
-svg.paths = function (ia) {
+svg.paths = function (ia, close = false) {
   let output = "";
   for (var i = 0; i < ia.length; i++) {
-      output += svg.path(ia[i]);
+      output += svg.path(ia[i], close);
   }
   return output;
 };
