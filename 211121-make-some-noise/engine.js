@@ -66,7 +66,6 @@ svg.path = function (ia, close = false) {
     if (close) {
       output += "z";
     }
-
     return output;
 };
 
@@ -77,6 +76,11 @@ svg.paths = function (ia, close = false) {
   }
   return output;
 };
+
+svg.dot = function(io) {
+  let output = "M " + io.x * ngn.res + " " + io.y * ngn.res + " z"
+  return output
+}
 
 svg.makeLayer = function ({ parent, id, x = 0, y = 0 }) {
     dom[id] = document.createElementNS(svg.nameSpace, "svg");
