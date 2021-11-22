@@ -82,6 +82,14 @@ svg.dot = function(io) {
   return output
 }
 
+svg.dots = function(ia) {
+  let output = ""
+  for(i = 0; i < ia.length; i++) {
+    output += svg.dot(ia[i])
+  }
+  return output
+}
+ 
 svg.makeLayer = function ({ parent, id, x = 0, y = 0 }) {
     dom[id] = document.createElementNS(svg.nameSpace, "svg");
     dom[id].id = id;
