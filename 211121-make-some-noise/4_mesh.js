@@ -21,7 +21,6 @@ mesh.paths = function (ia, close = false) {
   return output;
 };
 
-
 mesh.dot = function(io) {
   let output = "M " + io.pos.x * ngn.res + " " + io.pos.y * ngn.res + " z"
   return output
@@ -40,9 +39,7 @@ mesh.connections = function(ia) {
 }
 
 // SETUP
-
 let simplex = new SimplexNoise();
-
 
 let nCols = 10
 let nRows = nCols
@@ -67,7 +64,6 @@ for (let x = 0; x < nCols; x++) {
   }
   points.push(cols)
 }
-// console.log(points)
 
 let connections = []
 // assign connections to each point
@@ -80,9 +76,8 @@ for (let x = 0; x < nCols - 1; x++) {
     connections.push([pa, pb, pc, pd])
   }
 }
-console.log(connections)
+// console.log(connections)
 
-// let path = mesh.paths(connections, true)
 
 svg.makeLine({
   parent: dom.svgLayer,
@@ -91,7 +86,6 @@ svg.makeLine({
   cap: "round",
   stroke: .3
 })
-
 
 
 // ANIMATE
