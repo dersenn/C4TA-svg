@@ -65,8 +65,8 @@ for (let x = 0; x < nCols; x++) {
   points.push(cols)
 }
 
-let connections = []
 // assign connections to each point
+let connections = []
 for (let x = 0; x < nCols - 1; x++) {
   for (let y = 0; y < nRows - 1; y++) {
     let pa = points[x][y]
@@ -89,22 +89,30 @@ svg.makeLine({
 
 
 // ANIMATE
-let res = 0.0003
+let res = 0.01
+let speed = 1000
+
+
+let newPoints = connections
 
 function loop(t) {
 
   for (let i = 0; i < connections.length; i++) {
-    let perlinX = simplex.noise2D (t * res, i)
+    let perlinX = simplex.noise2D(t / speed, i)
+    let perlinY = simplex.noise2D(i, t / speed)
     for (let j = 0; j < connections[i].length; j++) {
-      // let perlinY = simplex.noise2D (t * res, j)
-      p = connections[i][j]
-      // console.log(p)
-      p.pos.x += perlinX * cell.w/1000
-      p.pos.y += perlinX * cell.w/1000
+      op = connections[i][j]
+      np = newPoints[i][j]
+
+      np.pos.x = op.pos.x + mapValues(perlinX * res, -1, 1, -cell.w/2, cell.w/2)
+      np.pos.y = op.pos.y + mapValues(perlinY * res, -1, 1, -cell.w/2, cell.w/2)
+
+      // p.pos.x += perlinX * cell.w/1000
+      // p.pos.y += perlinY * cell.w/1000
     }
   }
 
-  let path = mesh.paths(connections, true)
+  let path = mesh.paths(newPoints, true)
 
   dom.cells.setAttributeNS(null, "d", path)
 
