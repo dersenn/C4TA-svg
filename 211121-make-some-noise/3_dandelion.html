@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+
+  <meta name="author" content="Christoph Senn">
+  <meta name="description" content="Adventures in SVG">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- silence is golden -->
+
+</body>
+
+<!-- the basics -->
+<script src="engine.js"></script>
+<script src="basefunctions.js"></script>
+<script src="simplex-noise.min.js"></script>
+
+<!-- the individual sketches/classes/functions -->
+
+
+<!-- the setup and drawing -->
+<script src="3_dandelion.js"></script>
+
+
+<script>
+  // use current directory name as title for the site.
+  // self executing function.
+  (function() {
+      let location = window.location.pathname
+      let path = location.substring(0, location.lastIndexOf("/"))
+      let directoryName = path.substring(path.lastIndexOf("/")+1)
+      document.title = directoryName
+  })();
+</script>
+
+</html>
