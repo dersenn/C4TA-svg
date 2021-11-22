@@ -100,12 +100,13 @@ let res = 0.0003
 function loop(t) {
 
   for (let i = 0; i < connections.length; i++) {
-    let perlin = simplex.noise2D (t * res, i)
+    let perlinX = simplex.noise2D (t * res, i)
     for (let j = 0; j < connections[i].length; j++) {
+      // let perlinY = simplex.noise2D (t * res, j)
       p = connections[i][j]
       // console.log(p)
-      p.pos.x += perlin * cell.w/1000
-      p.pos.y += perlin * cell.w/1000
+      p.pos.x += perlinX * cell.w/1000
+      p.pos.y += perlinX * cell.w/1000
     }
   }
 
