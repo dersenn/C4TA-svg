@@ -33,7 +33,7 @@ svg.makeLine({
   parent: dom.svgLayer, 
   id: "wave",
   cap: "round", 
-  stroke: .3, 
+  stroke: .9, 
   color: "#000", 
   d: ""
   // d: svg.path(points, false)
@@ -73,7 +73,7 @@ svg.makeLine({
   parent: dom.svgLayer, 
   id: "wave2",
   cap: "round", 
-  stroke: 1, 
+  stroke: .3, 
   color: "#000", 
   d: ""
   // d: svg.path(points, false)
@@ -97,7 +97,7 @@ const loop2 = function loop(time) {
     lines.push(points)
   }
 
-  let col = simplex.noise2D(time/500, 0)
+  let col = simplex.noise2D(time/2000, 0)
   col = mapValues(col, -1, 1, 0, 255)
 
   dom["wave2"].setAttributeNS(null, "d", svg.paths(lines));
