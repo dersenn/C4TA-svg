@@ -19,47 +19,47 @@ svg.lineSoft = function (ia) {
 
 
 // SETUP
-// let simplex = new SimplexNoise();
+let simplex = new SimplexNoise();
 
 let nPoints = 5
-
 let points = []
 
 for (let p = 0; p < nPoints; p++) {
   points.push({x: mapValues(Math.random(), 0, 1, -ngn.width/2, ngn.width/2), y: mapValues(Math.random(), 0, 1, -ngn.height/2, ngn.height/2)})
 }
 
-let path = svg.lineSoft(points)
-
-let cpts = svg.dots(points)
-
 // DRAW
 
+// the green line
 svg.makeLine({
   parent: dom.svgLayer,
   id: "bezier",
   color: "#0f0",
   cap: "round",
-  d: path,
   stroke: .2
 })
 
+// the red dots
 svg.makeLine({
   parent: dom.svgLayer,
   id: "cpts",
   color: "#f00",
   cap: "round",
-  d: cpts,
   stroke: 1
 })
 
 // ANIMATE
 
-// function draw(t) {
+let path = svg.lineSoft(points)
+let cpts = svg.dots(points)
 
-//   dom["bezier"].setAttributeNS(null, "d", path)
+// No Animation yet ¯\_(ツ)_/¯
+function draw(t) {
 
-//   requestAnimationFrame(draw)
-// }
+  dom["bezier"].setAttributeNS(null, "d", path)
+  dom["cpts"].setAttributeNS(null, "d", cpts)
 
-// draw(0)
+  requestAnimationFrame(draw)
+}
+
+draw(0)
