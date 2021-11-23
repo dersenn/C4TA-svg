@@ -1,0 +1,18 @@
+body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  font-size: 0;
+  font-family:  sans-serif;
+  color: #000;
+  background-color: #000;
+  user-select: none;
+}
+
+stage,
+svg,
+path {
+  position: fixed;
+  overflow: visible;
+}
