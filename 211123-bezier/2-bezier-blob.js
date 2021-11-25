@@ -180,35 +180,10 @@ let thepoints = svg.dots(points)
 
 let cBezier = svg.cubicBezier(points, false)
 
+
 let controlPts = getControlPoints(points[1], points[2], points[3])
+let cPoints = svg.dots(controlPts)
 
-
-// for (let i = 0; i < nPoints; i++) {
-//   if (i == 0) {
-//   controlPts = getControlPoints(
-//     points[nPoints-1], 
-//     points[i], 
-//     points[i+1], 
-//     .5
-//     )
-//   } else if (i == nPoints -1) {
-//   controlPts = getControlPoints(
-//     points[i-1], 
-//     points[i], 
-//     points[0], 
-//     .5
-//     )
-//   } else {
-//   controlPts = getControlPoints(
-//     points[i-1], 
-//     points[i], 
-//     points[i+1], 
-//     .5
-//     )  
-//   }
-// }
-
-let cPoints = svg.dots(controlPts, false)
 
 console.log(points)
 // console.log(cPoints)
@@ -219,7 +194,7 @@ console.log("cBezier: " + cBezier)
 dom["points"].setAttributeNS(null, "d", thepoints)
 
 dom["bezier"].setAttributeNS(null, "d", cBezier)
-dom["cPoints"].setAttributeNS(null, "d", cPoints)
+// dom["cPoints"].setAttributeNS(null, "d", cPoints)
 
 // ANIMATE
 // No Animation yet ¯\_(ツ)_/¯
