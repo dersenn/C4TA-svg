@@ -78,7 +78,7 @@ svg.paths = function (ia, close = false) {
 };
 
 svg.dot = function(io) {
-  let output = "M " + io.x * ngn.res + " " + io.y * ngn.res + " z"
+  let output = "M " + io.x * ngn.res + " " + io.y * ngn.res + " z "
   return output
 }
 
