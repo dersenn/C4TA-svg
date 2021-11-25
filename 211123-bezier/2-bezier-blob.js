@@ -22,39 +22,51 @@ svg.lineSoft = function (ia, close = false) {
 };
 
 // FANTASTIC BEZIERS
-svg.cubicBezier = function (ia, close = false) {
+svg.cubicBezier = function (ia, close = false, t = 0.5) {
   if (close) {
     ia.push(ia[0])
   }
 
-  let output = "M "
+  // move to first point
+  let output = "M " + ia[0].x + "," + ia[0].y + " "
+
   for (let i = 0; i < ia.length; i++) {
     let p0, p1, p2
 
+    console.log(ia.length - 1)
+
     if (i == 0) {
-      p0 = ia[-1]
+      // output +=  ia[0].x + "," + ia[0].y + " "
+      // something's wrong here... 
+      p0 = ia[ia.length - 1] // {x: 0, y: 0}
       p1 = ia[i]
       p2 = ia[i+1]
-      // add first point to M statement
-      output += p1.x + ", " + p1.y + " "
-      // add cubic bezier to point1
-      output += "C " + p2.x + ", " + p2.y + " " 
     } else if (i == ia.length - 1) {
       p0 = ia[i-1]
       p1 = ia[i]
       p2 = ia[0]
     } else {
-
+      p0 = ia[i-1]
+      p1 = ia[i]
+      p2 = ia[i+1]
     }
 
+    let cp = getControlPoints(p0, p1, p2, t)
+    // console.log(cp)
+    output +=
+      "C "
+      + cp[0].x * ngn.res + "," + cp[0].y * ngn.res + " "
+      + cp[1].x * ngn.res + "," + cp[1].y * ngn.res + " "
+      + p2.x * ngn.res + "," + p2.y * ngn.res + "    "
   }
-
 
   return output;
 };
 
+
 // adapted from this: http://scaledinnovation.com/analytics/splines/aboutSplines.html
-// rethink input/output!
+// rethink output!
+// gets Control Points for p1!!!
 function getControlPoints(p0, p1, p2, t){
   let d01 = Math.sqrt(Math.pow(p1.x - p0.x, 2) + Math.pow(p1.y - p0.y, 2)); // distance between pt1 and pt2
   let d12 = Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2)); // distance between pt2 and pt3
@@ -86,7 +98,7 @@ function getControlPoints(p0, p1, p2, t){
 // SETUP
 let simplex = new SimplexNoise();
 
-let maxLength = ngn.width/2
+let maxLength = ngn.width/2 - 10
 let amp = 2
 let minLength = maxLength / amp//maxLength - maxLength / amp
 
@@ -114,7 +126,7 @@ for (let i = 0; i < nPoints; i++) {
   let xOff = mapValues(Math.cos(a), -1, 1, 0, noiseMax)
   let yOff = mapValues(Math.sin(a), -1, 1, 0, noiseMax)
   
-  let wiggle = simplex.noise3D(xOff * res, yOff * res, 1)
+  let wiggle = 1 // simplex.noise3D(xOff * res, yOff * res, 1)
 
   radius = mapValues(wiggle, -1, 1, minLength, maxLength)
 
@@ -154,7 +166,7 @@ svg.makeLine({
   stroke: .2
 })
 
-// the green points (controlpoints)
+// the light blue points (controlpoints for specific points)
 svg.makeLine({
   parent: dom.svgLayer,
   id: "cPoints",
@@ -163,24 +175,47 @@ svg.makeLine({
   stroke: 1
 })
 
-let path = svg.lineSoft(points, true)
+// let path = svg.lineSoft(points, true)
 let thepoints = svg.dots(points)
 
 let cBezier = svg.cubicBezier(points, false)
 
-let controlPts = getControlPoints(
-  points[2], 
-  points[3], 
-  points[4], 
-  .5
-  )
+let controlPts = getControlPoints(points[1], points[2], points[3])
+
+
+// for (let i = 0; i < nPoints; i++) {
+//   if (i == 0) {
+//   controlPts = getControlPoints(
+//     points[nPoints-1], 
+//     points[i], 
+//     points[i+1], 
+//     .5
+//     )
+//   } else if (i == nPoints -1) {
+//   controlPts = getControlPoints(
+//     points[i-1], 
+//     points[i], 
+//     points[0], 
+//     .5
+//     )
+//   } else {
+//   controlPts = getControlPoints(
+//     points[i-1], 
+//     points[i], 
+//     points[i+1], 
+//     .5
+//     )  
+//   }
+// }
 
 let cPoints = svg.dots(controlPts, false)
 
-console.log(controlPts)
-console.log(cPoints)
+console.log(points)
+// console.log(cPoints)
+console.log("cBezier: " + cBezier)
 
-dom["softLine"].setAttributeNS(null, "d", path)
+
+// dom["softLine"].setAttributeNS(null, "d", path)
 dom["points"].setAttributeNS(null, "d", thepoints)
 
 dom["bezier"].setAttributeNS(null, "d", cBezier)
@@ -191,7 +226,7 @@ dom["cPoints"].setAttributeNS(null, "d", cPoints)
 
 function draw(t) {
 
-  requestAnimationFrame(draw)
+  // requestAnimationFrame(draw)
 }
 
 draw(0)
