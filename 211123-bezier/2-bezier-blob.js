@@ -21,28 +21,66 @@ svg.lineSoft = function (ia, close = false) {
   return output;
 };
 
+// FANTASTIC BEZIERS
 svg.cubicBezier = function (ia, close = false) {
-  let output = "M 0,0"
-
   if (close) {
     ia.push(ia[0])
   }
 
+  let output = "M "
+  for (let i = 0; i < ia.length; i++) {
+    let p0, p1, p2
+
+    if (i == 0) {
+      p0 = ia[-1]
+      p1 = ia[i]
+      p2 = ia[i+1]
+      // add first point to M statement
+      output += p1.x + ", " + p1.y + " "
+      // add cubic bezier to point1
+      output += "C " + p2.x + ", " + p2.y + " " 
+    } else if (i == ia.length - 1) {
+      p0 = ia[i-1]
+      p1 = ia[i]
+      p2 = ia[0]
+    } else {
+
+    }
+
+  }
+
+
   return output;
 };
 
-// from this: http://scaledinnovation.com/analytics/splines/aboutSplines.html
-function getControlPoints(x0, y0, x1, y1, x2, y2, t){
-  let d01 = Math.sqrt(Math.pow(x1-x0, 2) + Math.pow(y1-y0, 2)); // distance between pt1 and pt2
-  let d12 = Math.sqrt(Math.pow(x2-x1, 2) + Math.pow(y2-y1, 2)); // distance between pt2 and pt3
+// adapted from this: http://scaledinnovation.com/analytics/splines/aboutSplines.html
+// rethink input/output!
+function getControlPoints(p0, p1, p2, t){
+  let d01 = Math.sqrt(Math.pow(p1.x - p0.x, 2) + Math.pow(p1.y - p0.y, 2)); // distance between pt1 and pt2
+  let d12 = Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2)); // distance between pt2 and pt3
   let fa = t * d01 / (d01+d12);   // scaling factor for triangle Ta
   let fb = t * d12 / (d01+d12);   // ditto for Tb, simplifies to fb=t-fa
-  let p1x = x1-fa * (x2-x0);    // x2-x0 is the width of triangle T
-  let p1y = y1-fa * (y2-y0);    // y2-y0 is the height of T
-  let p2x = x1+fb * (x2-x0);
-  let p2y = y1+fb * (y2-y0);  
-  return [{x: p1x, y: p1y}, {x: p2x, y: p2y}];
+  let cp1x = p1.x - fa * (p2.x - p0.x);    // x2-x0 is the width of triangle T
+  let cp1y = p1.y - fa * (p2.y - p0.y);    // y2-y0 is the height of T
+  let cp2x = p1.x + fb * (p2.x - p0.x);
+  let cp2y = p1.y + fb * (p2.y- p0.y);  
+  return [{x: cp1x, y: cp1y}, {x: cp2x, y: cp2y}];
 }
+
+
+// adapted from this: http://scaledinnovation.com/analytics/splines/aboutSplines.html
+// rethink input/output!
+// function getControlPoints(x0, y0, x1, y1, x2, y2, t){
+//   let d01 = Math.sqrt(Math.pow(x1-x0, 2) + Math.pow(y1-y0, 2)); // distance between pt1 and pt2
+//   let d12 = Math.sqrt(Math.pow(x2-x1, 2) + Math.pow(y2-y1, 2)); // distance between pt2 and pt3
+//   let fa = t * d01 / (d01+d12);   // scaling factor for triangle Ta
+//   let fb = t * d12 / (d01+d12);   // ditto for Tb, simplifies to fb=t-fa
+//   let p1x = x1-fa * (x2-x0);    // x2-x0 is the width of triangle T
+//   let p1y = y1-fa * (y2-y0);    // y2-y0 is the height of T
+//   let p2x = x1+fb * (x2-x0);
+//   let p2y = y1+fb * (y2-y0);  
+//   return [{x: p1x, y: p1y}, {x: p2x, y: p2y}];
+// }
 
 
 // SETUP
@@ -89,7 +127,7 @@ for (let i = 0; i < nPoints; i++) {
 
 // DRAW
 
-// the grey line
+// the grey line (softLine ex Chrigi)
 svg.makeLine({
   parent: dom.svgLayer,
   id: "softLine",
@@ -125,16 +163,15 @@ svg.makeLine({
   stroke: 1
 })
 
-
-let path = svg.lineSoft(points, false)
+let path = svg.lineSoft(points, true)
 let thepoints = svg.dots(points)
 
 let cBezier = svg.cubicBezier(points, false)
 
 let controlPts = getControlPoints(
-  points[2].x, points[2].y, 
-  points[3].x, points[3].y, 
-  points[4].x, points[4].y,
+  points[2], 
+  points[3], 
+  points[4], 
   .5
   )
 
