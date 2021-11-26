@@ -5,14 +5,10 @@ body {
   height: 100vh;
   font-size: 0;
   font-family:  sans-serif;
-  color: #000;
+  color: #fff;
   background-color: #000;
   user-select: none;
 }
-
-h1 {
-  color: #0f0;
-} 
 
 stage,
 svg,

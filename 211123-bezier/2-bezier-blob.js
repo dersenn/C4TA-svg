@@ -55,18 +55,14 @@ svg.cubicBezier = function (ia, close = false, t = 0.5) {
     // console.log(cp)
     output +=
       "C "
-      + cp[0].x * ngn.res + "," + cp[0].y * ngn.res + " "
       + cp[1].x * ngn.res + "," + cp[1].y * ngn.res + " "
+      + cp[0].x * ngn.res + "," + cp[0].y * ngn.res + " "
       + p2.x * ngn.res + "," + p2.y * ngn.res + "    "
   }
 
   return output;
 };
 
-
-// adapted from this: http://scaledinnovation.com/analytics/splines/aboutSplines.html
-// rethink output!
-// gets Control Points for p1!!!
 function getControlPoints(p0, p1, p2, t){
   let d01 = Math.sqrt(Math.pow(p1.x - p0.x, 2) + Math.pow(p1.y - p0.y, 2)); // distance between pt1 and pt2
   let d12 = Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2)); // distance between pt2 and pt3
@@ -78,7 +74,6 @@ function getControlPoints(p0, p1, p2, t){
   let cp2y = p1.y + fb * (p2.y- p0.y);  
   return [{x: cp1x, y: cp1y}, {x: cp2x, y: cp2y}];
 }
-
 
 // adapted from this: http://scaledinnovation.com/analytics/splines/aboutSplines.html
 // rethink input/output!
@@ -94,7 +89,6 @@ function getControlPoints(p0, p1, p2, t){
 //   return [{x: p1x, y: p1y}, {x: p2x, y: p2y}];
 // }
 
-
 // SETUP
 let simplex = new SimplexNoise();
 
@@ -102,7 +96,7 @@ let maxLength = ngn.width/2 - 10
 let amp = 2
 let minLength = maxLength / amp//maxLength - maxLength / amp
 
-let nPoints = 5
+let nPoints = 4
 let points = []
 
 let aStep = 2 * Math.PI/nPoints
@@ -111,7 +105,6 @@ let a = 0
 let noiseMax = 4
 let res = .6
 
-
 // for (let p = 0; p < nPoints; p++) {
 //   points.push({
 //     x: mapValues(Math.random(), 0, 1, -ngn.width/2, ngn.width/2), 
@@ -119,23 +112,23 @@ let res = .6
 //   })
 // }
 
+// THIS THE BLOB POINTS CREATION, COMMENTNED OUT FOR DEUBUGGING.
+// for (let i = 0; i < nPoints; i++) {
+//   a = i * aStep
 
-for (let i = 0; i < nPoints; i++) {
-  a = i * aStep
-
-  let xOff = mapValues(Math.cos(a), -1, 1, 0, noiseMax)
-  let yOff = mapValues(Math.sin(a), -1, 1, 0, noiseMax)
+//   let xOff = mapValues(Math.cos(a), -1, 1, 0, noiseMax)
+//   let yOff = mapValues(Math.sin(a), -1, 1, 0, noiseMax)
   
-  let wiggle = 1 // simplex.noise3D(xOff * res, yOff * res, 1)
+//   let wiggle = 1 // simplex.noise3D(xOff * res, yOff * res, 1)
 
-  radius = mapValues(wiggle, -1, 1, minLength, maxLength)
+//   radius = mapValues(wiggle, -1, 1, minLength, maxLength)
 
-  let pt = {x: Math.cos(a) * radius, y: Math.sin(a) * radius}
+//   let pt = {x: Math.cos(a) * radius, y: Math.sin(a) * radius}
 
-  points.push(pt)
-}
+//   points.push(pt)
+// }
 
-// console.log(points)
+points = [{x: -ngn.width/2, y: 0}, {x: 0, y: ngn.height/2}, {x: ngn.width/2, y: 0}]
 
 // DRAW
 
@@ -181,10 +174,6 @@ let thepoints = svg.dots(points)
 let cBezier = svg.cubicBezier(points, false)
 
 
-let controlPts = getControlPoints(points[1], points[2], points[3])
-let cPoints = svg.dots(controlPts)
-
-
 console.log(points)
 // console.log(cPoints)
 console.log("cBezier: " + cBezier)
@@ -194,14 +183,10 @@ console.log("cBezier: " + cBezier)
 dom["points"].setAttributeNS(null, "d", thepoints)
 
 dom["bezier"].setAttributeNS(null, "d", cBezier)
-// dom["cPoints"].setAttributeNS(null, "d", cPoints)
 
 // ANIMATE
 // No Animation yet ¯\_(ツ)_/¯
-
 function draw(t) {
-
   // requestAnimationFrame(draw)
 }
-
 draw(0)
