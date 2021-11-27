@@ -1,32 +1,9 @@
 // FUNCTIONS
 
-svg.lineSoft = function (ia, close = false) {
-  //clone first and last point
-  ia.unshift(ia[0]);
-  // ia.push(ia[ia.length - 1]);
-
-  // add the first point to the end to close the shape
-  if (close) {
-    ia.push(ia[0]);
-  } else {
-    ia.push(ia[ia.length - 1]);
-  }
-  let output = "M ";
-  for (let i = 1; i < ia.length; i++) {
-      output += (ia[i - 1].x + ia[i].x) / 2 * ngn.res + "," + (ia[i - 1].y + ia[i].y) / 2 * ngn.res + " Q";
-      output += ia[i].x * ngn.res + "," +ia[i].y * ngn.res + " ";
-  }
-  //end point
-  output += ia[ia.length - 1].x * ngn.res + "," + ia[ia.length - 1].y * ngn.res + " ";
-  return output;
-};
-
-// FANTASTIC BEZIERS
 svg.cubicBezier = function (ia, close = false, t = 0.5) {
   if (close) {
     ia.push(ia[0])
   }
-
   // move to first point
   let output = "M " + ia[0].x + "," + ia[0].y + " "
 
@@ -89,57 +66,10 @@ function getControlPoints(p0, p1, p2, t){
 //   return [{x: p1x, y: p1y}, {x: p2x, y: p2y}];
 // }
 
-// SETUP
-let simplex = new SimplexNoise();
 
-let maxLength = ngn.width/2 - 10
-let amp = 2
-let minLength = maxLength / amp//maxLength - maxLength / amp
-
-let nPoints = 4
-let points = []
-
-let aStep = 2 * Math.PI/nPoints
-let a = 0
-
-let noiseMax = 4
-let res = .6
-
-// for (let p = 0; p < nPoints; p++) {
-//   points.push({
-//     x: mapValues(Math.random(), 0, 1, -ngn.width/2, ngn.width/2), 
-//     y: mapValues(Math.random(), 0, 1, -ngn.height/2, ngn.height/2)
-//   })
-// }
-
-// THIS THE BLOB POINTS CREATION, COMMENTNED OUT FOR DEUBUGGING.
-// for (let i = 0; i < nPoints; i++) {
-//   a = i * aStep
-
-//   let xOff = mapValues(Math.cos(a), -1, 1, 0, noiseMax)
-//   let yOff = mapValues(Math.sin(a), -1, 1, 0, noiseMax)
-  
-//   let wiggle = 1 // simplex.noise3D(xOff * res, yOff * res, 1)
-
-//   radius = mapValues(wiggle, -1, 1, minLength, maxLength)
-
-//   let pt = {x: Math.cos(a) * radius, y: Math.sin(a) * radius}
-
-//   points.push(pt)
-// }
-
-points = [{x: -ngn.width/2, y: 0}, {x: 0, y: ngn.height/2}, {x: ngn.width/2, y: 0}]
+points = [{x: -ngn.width/2 + 10, y: 0}, {x: 0, y: ngn.height/2 - 10 }, {x: ngn.width/2 - 10, y: 0}]
 
 // DRAW
-
-// the grey line (softLine ex Chrigi)
-svg.makeLine({
-  parent: dom.svgLayer,
-  id: "softLine",
-  color: "#ddd",
-  cap: "round",
-  stroke: .2
-})
 
 // the red dots (the points)
 svg.makeLine({
@@ -159,34 +89,46 @@ svg.makeLine({
   stroke: .2
 })
 
-// the light blue points (controlpoints for specific points)
-svg.makeLine({
-  parent: dom.svgLayer,
-  id: "cPoints",
-  color: "#0ff",
-  cap: "round",
-  stroke: 1
-})
 
-// let path = svg.lineSoft(points, true)
 let thepoints = svg.dots(points)
 
-let cBezier = svg.cubicBezier(points, false)
+// let cBezier = svg.cubicBezier(points, false)
 
 
-console.log(points)
-// console.log(cPoints)
-console.log("cBezier: " + cBezier)
+// let bezPath
+// bezPath = 
+//   "M " + points[0].x * ngn.res + "," + points[0].y * ngn.res + " "
+//   + "C " 
+//   + -ngn.rwidth/2 + "," + ngn.rheight/2 + " " 
+//   + -ngn.rwidth/2 + "," + ngn.rheight/2 + " " 
+//   + points[1].x * ngn.res + "," + points[1].y * ngn.res
+
+let bezPath
+bezPath = 
+  "M " + points[0].x * ngn.res + "," + points[0].y * ngn.res + " "
+  + "C " 
+  + points[0].x * ngn.res + "," + points[1].y * ngn.res + " " 
+  + points[0].x * ngn.res + "," + points[1].y * ngn.res + " " 
+  + points[1].x * ngn.res + "," + points[1].y * ngn.res
+  // + " z"
+
+// really need to rewrite the engine... this ngn.res thing is confusing to me.
+// don't know when and where to use it or not..
+
+console.log(bezPath)
+
+
+
+// console.log(points)
+// console.log("cBezier: " + cBezier)
 
 
 // dom["softLine"].setAttributeNS(null, "d", path)
 dom["points"].setAttributeNS(null, "d", thepoints)
+dom["bezier"].setAttributeNS(null, "d", bezPath)
 
-dom["bezier"].setAttributeNS(null, "d", cBezier)
 
-// ANIMATE
-// No Animation yet ¯\_(ツ)_/¯
-function draw(t) {
-  // requestAnimationFrame(draw)
-}
-draw(0)
+
+
+
+// My only friend, the End.

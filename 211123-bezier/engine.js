@@ -44,7 +44,9 @@ ngn.scale = function ({ width, height }) {
   ngn.center = { x: ngn.width / 2, y: ngn.height / 2}
   ngn.min = Math.min(ngn.width, ngn.height)
   ngn.max = Math.max(ngn.width, ngn.height)
-  console.log(ngn)
+  ngn.rwidth = ngn.width * ngn.res
+  ngn.rheight = ngn.height * ngn.res
+  // console.log(ngn)
 }
 
 ngn.scale({ height: 100})
