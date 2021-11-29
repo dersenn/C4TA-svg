@@ -92,10 +92,10 @@ svg.makeLine({
 
 let simplex = new SimplexNoise();
 
-let maxLength = ngn.width/2
+let maxLength = ngn.min/2
 let minLength = maxLength / 3
 
-let noiseMax = 10 // what's this for again???
+let noiseMax = 4 // what's this for again???
 let res = 1
 let speed = 2000
 
@@ -126,10 +126,10 @@ function draw(t) {
   // something's not quite right here. last & first point don't line up.
   let xOff = mapValues(Math.cos(t * aStep), -1, 1, 0, 1)
   let yOff = mapValues(Math.sin(t * aStep), -1, 1, 0, 1)
-  edgy = mapValues(simplex.noise3D(xOff * .00000001, yOff * .00000001, t/1000), -1, 1, -1, 2)
+  edgy = mapValues(simplex.noise3D(xOff * .00000001, yOff * .00000001, t/2000), -1, 1, 0, 2)
 
   dom["points"].setAttributeNS(null, "d", svg.dots(points))
-  // dom["blob"].setAttributeNS(null, "d", svg.bezierPath(points, .3, true))
+  // dom["blob"].setAttributeNS(null, "d", svg.bezierPath(points, .4, true))
   dom["wierdo"].setAttributeNS(null, "d", svg.bezierPath(points, edgy, true))
 
   requestAnimationFrame(draw)
