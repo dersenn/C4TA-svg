@@ -60,6 +60,9 @@ let svg = {};
 
 svg.nameSpace = "http://www.w3.org/2000/svg";
 
+/*
+<circle cx="50" cy="50" r="50"/>
+*/
 svg.path = function (ia, close = false) {
     let output = "M ";
     for (var i = 0; i < ia.length; i++) {

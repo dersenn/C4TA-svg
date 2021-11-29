@@ -1,24 +1,23 @@
 // FUNCTIONS
 
-
 svg.bezierPath = function(pts, t, closed) {
-  let cp = []   // array of control points, as x0,y0,x1,y1,... CHANGED TO {cp1}, {cp2}
+  let cp = []
   let n = pts.length
   let output = ""
 
+  // Append and prepend first and last point to generate control points
+  pts.push(pts[0])
+  pts.unshift(pts[n-1])
+  for (let i = 0; i < n; i++) {
+    cp.push(getControlPoints(pts[i], pts[i+1], pts[i+2], t))
+  }
+  // to make the loop afterwards a bit easier do the same for generated cps.
+  cp.push(cp[0])
+  cp.unshift(cp[n-1])
+
+  output += "M " + pts[1].x * ngn.res + "," + pts[1].y * ngn.res + " "
+
   if (closed) {
-    // Append and prepend first and last point to generate control points
-    pts.push(pts[0])
-    pts.unshift(pts[n-1])
-    for (let i = 0; i < n; i++) {
-      cp.push(getControlPoints(pts[i], pts[i+1], pts[i+2], t))
-    }
-    // to make the loop afterwards a bit easier do the same for generated cps.
-    cp.push(cp[0])
-    cp.unshift(cp[n-1])
-
-    output += "M " + pts[1].x * ngn.res + "," + pts[1].y * ngn.res + " "
-
     for (let i = 1; i < n+1; i++) {
       let cp1 = cp[i][1]
       let cp2 = cp[i+1][0]
@@ -30,14 +29,24 @@ svg.bezierPath = function(pts, t, closed) {
         ep.x * ngn.res + "," + ep.y * ngn.res
     }
   } else {
-    // add option for non-closed path (quadratic beziers at beginning/end?)
+    // change to quadratic bezier for first and last point. see example.js
+    // so, not quite there yet
+    for (let i = 1; i < n; i++) {
+      let cp1 = cp[i][1]
+      let cp2 = cp[i+1][0]
+      let ep = pts[i+1]
+
+      output += "C " + 
+        cp1.x * ngn.res + "," + cp1.y * ngn.res + " " + 
+        cp2.x * ngn.res + "," + cp2.y * ngn.res + " " + 
+        ep.x * ngn.res + "," + ep.y * ngn.res
+    }
   }
   return output
-
 }
 
 // adapted from this: http://scaledinnovation.com/analytics/splines/aboutSplines.html
-function getControlPoints(p0, p1, p2, t = 0.5) {
+function getControlPoints(p0, p1, p2, t) {
   let d01 = Math.sqrt(Math.pow(p1.x - p0.x, 2) + Math.pow(p1.y - p0.y, 2)); // distance between pt1 and pt2
   let d12 = Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2)); // distance between pt2 and pt3
   let fa = t * d01 / (d01+d12);   // scaling factor for triangle Ta
@@ -51,16 +60,25 @@ function getControlPoints(p0, p1, p2, t = 0.5) {
 
 // DRAW
 
-// the red dots (the points)
-// the bezier line
-svg.makeLine({
+// the blob
+svg.makeShape({
   parent: dom.svgLayer,
-  id: "cubic",
+  id: "blob",
   color: "#0f0",
   cap: "round",
   stroke: .2
 })
 
+// the wierdo
+svg.makeLine({
+  parent: dom.svgLayer,
+  id: "wierdo",
+  color: "#fff",
+  cap: "round",
+  stroke: .2
+})
+
+// the red dots (the points)
 svg.makeLine({
   parent: dom.svgLayer,
   id: "points",
@@ -69,16 +87,54 @@ svg.makeLine({
   stroke: 1
 })
 
-let points = [{x: -ngn.width/2 + 10, y: 0}, {x: 0, y: ngn.height/2 - 10 }, {x: ngn.width/2 - 10, y: 0}, {x: 0, y: -ngn.height/2 + 10 }]
+// SETUP
 
-let thepoints = svg.dots(points)
-let cubicPath = svg.bezierPath(points, .5, true)
-// console.log(cubicPath)
+let simplex = new SimplexNoise();
 
+let maxLength = ngn.width/2
+let minLength = maxLength / 3
 
-dom["points"].setAttributeNS(null, "d", thepoints)
-dom["cubic"].setAttributeNS(null, "d", cubicPath)
+let noiseMax = 10 // what's this for again???
+let res = 1
+let speed = 2000
 
+let nPts = 10
+let aStep = -Math.PI*2 / nPts
+
+let edgy
+
+// ANIMATE
+
+function draw(t) {
+  let points = []
+
+  for (let p = 0; p < nPts; p++) {
+    let a = p * aStep
+
+    let xOff = mapValues(Math.cos(a), -1, 1, 0, noiseMax)
+    let yOff = mapValues(Math.sin(a), -1, 1, 0, noiseMax)
+    
+    let wobble = simplex.noise3D(xOff * res, yOff * res, t/speed)
+    let radius = mapValues(wobble, -1, 1, minLength, maxLength)
+
+    let pt = {x: Math.cos(a) * radius, y: Math.sin(a) * radius}
+
+    points.push(pt)
+  }
+
+  let xOff = mapValues(Math.cos(t * aStep), -1, 1, 0, 1)
+  let yOff = mapValues(Math.sin(t * aStep), -1, 1, 0, 1)
+  edgy = mapValues(simplex.noise3D(xOff * .00001, yOff * .00001, t/1000), -1, 1, -2, 2)
+
+  dom["points"].setAttributeNS(null, "d", svg.dots(points))
+  dom["blob"].setAttributeNS(null, "d", svg.bezierPath(points, .3, true))
+  dom["wierdo"].setAttributeNS(null, "d", svg.bezierPath(points, edgy, true))
+
+  requestAnimationFrame(draw)
+
+}
+
+draw(0)
 
 
 
