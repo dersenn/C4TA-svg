@@ -1,4 +1,3 @@
-
 // SOME UTILITY FUNCTIONS
 
 function getRandomInt(min, max) {
