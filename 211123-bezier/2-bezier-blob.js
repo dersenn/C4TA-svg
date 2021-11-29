@@ -1,44 +1,33 @@
 // FUNCTIONS
 
-svg.cubicBezier = function (ia, close = false, t = 0.5) {
-  if (close) {
-    ia.push(ia[0])
-  }
-  // move to first point
-  let output = "M " + ia[0].x + "," + ia[0].y + " "
 
-  for (let i = 0; i < ia.length; i++) {
-    let p0, p1, p2
+svg.bezierPath = function(pts, t, closed = false) {
+  let cp = []   // array of control points, as x0,y0,x1,y1,... CHANGED TO {cp1}, {cp2}
+  let n = pts.length
+  let output = ""
 
-    console.log(ia.length - 1)
-
-    if (i == 0) {
-      // output +=  ia[0].x + "," + ia[0].y + " "
-      // something's wrong here... 
-      p0 = ia[ia.length - 1] // {x: 0, y: 0}
-      p1 = ia[i]
-      p2 = ia[i+1]
-    } else if (i == ia.length - 1) {
-      p0 = ia[i-1]
-      p1 = ia[i]
-      p2 = ia[0]
-    } else {
-      p0 = ia[i-1]
-      p1 = ia[i]
-      p2 = ia[i+1]
+  if (closed) {
+    // Append and prepend first and last point to generate control points
+    pts.push(pts[0])
+    pts.unshift(pts[n-2])
+    for (let i = 0; i < pts.length - 2; i++) {
+      // cp = cp.concat(getControlPoints(pts[i],pts[i+1],pts[i+2], t))
+      cp.push(getControlPoints(pts[i], pts[i+1], pts[i+2], t))
     }
+    console.log(pts)
+    console.log(cp)
+    output += "M " + pts[1].x * ngn.res + "," + pts[1].y * ngn.res + " " +
+      "C " + cp[0][1].x  * ngn.res + "," + cp[0][1].y * ngn.res + " " + cp[1][0].x * ngn.res + "," + cp[1][0].y * ngn.res + " " + pts[2].x * ngn.res + "," + pts[2].y * ngn.res + " " +
+      "C " + cp[1][1].x * ngn.res + "," + cp[1][1].y  * ngn.res+ " " + cp[2][0].x * ngn.res + "," + cp[2][0].y * ngn.res + " " + pts[3].x * ngn.res + "," + pts[3].y * ngn.res + " " + 
+      "C " + cp[2][1].x * ngn.res + "," + cp[2][1].y  * ngn.res+ " " + cp[3][0].x * ngn.res + "," + cp[3][0].y * ngn.res + " " + pts[4].x * ngn.res + "," + pts[4].y * ngn.res + " " +
+      "C " + cp[3][1].x * ngn.res + "," + cp[3][1].y  * ngn.res+ " " + cp[0][0].x * ngn.res + "," + cp[0][0].y * ngn.res + " " + pts[1].x * ngn.res + "," + pts[1].y * ngn.res + " "
+  } else {
 
-    let cp = getControlPoints(p0, p1, p2, t)
-
-    output +=
-      "C "
-      + cp[1].x * ngn.res + "," + cp[1].y * ngn.res + " "
-      + cp[0].x * ngn.res + "," + cp[0].y * ngn.res + " "
-      + p2.x * ngn.res + "," + p2.y * ngn.res + "    "
   }
 
-  return output;
-};
+  return output
+
+}
 
 // adapted from this: http://scaledinnovation.com/analytics/splines/aboutSplines.html
 function getControlPoints(p0, p1, p2, t = 0.5) {
@@ -51,7 +40,7 @@ function getControlPoints(p0, p1, p2, t = 0.5) {
   let cp2x = p1.x + fb * (p2.x - p0.x);
   let cp2y = p1.y + fb * (p2.y- p0.y);  
   return [{x: cp1x, y: cp1y}, {x: cp2x, y: cp2y}];
-  }
+}
 
 // DRAW
 
@@ -91,17 +80,17 @@ svg.makeLine({
   stroke: .2
 })
 
-let points = [{x: -ngn.width/2 + 10, y: 0}, {x: 0, y: ngn.height/2 - 10 }, {x: ngn.width/2 - 10, y: 0}]
+let points = [{x: -ngn.width/2 + 10, y: 0}, {x: 0, y: ngn.height/2 - 10 }, {x: ngn.width/2 - 10, y: 0}, {x: 0, y: -ngn.height/2 + 10 }]
 
-let cPoints = getControlPoints(points)
-console.log(points)
-console.log(cPoints)
 
 let thepoints = svg.dots(points)
-let cP = svg.dots(cPoints)
+let cPoints = getControlPoints(points[0], points[1], points[2])
+let cPts = svg.dots(cPoints)
+// console.log(cp)
+// let cPts = svg.dots(cp)
 
-let bezPath
-bezPath = 
+
+let testPath = 
   "M " + points[0].x * ngn.res + "," + points[0].y * ngn.res + " "
   + "C " 
   + points[0].x * ngn.res + "," + points[1].y * ngn.res + " " 
@@ -112,19 +101,16 @@ bezPath =
 // really need to rewrite the engine... this ngn.res thing is confusing to me.
 // don't know when and where to use it or not...
 
-// console.log(bezPath)
+// console.log(testPath)
 
-let cubicPath = bezPath
-
-// console.log(points)
-// console.log("cBezier: " + cBezier)
+let cubicPath = svg.bezierPath(points, .5, true)
+console.log(cubicPath)
 
 
-// dom["softLine"].setAttributeNS(null, "d", path)
 dom["points"].setAttributeNS(null, "d", thepoints)
-dom["bezier"].setAttributeNS(null, "d", bezPath)
+dom["bezier"].setAttributeNS(null, "d", testPath)
 dom["cubic"].setAttributeNS(null, "d", cubicPath)
-dom["control"].setAttributeNS(null, "d", cP)
+dom["control"].setAttributeNS(null, "d", cPts)
 
 
 
