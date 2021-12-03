@@ -1,3 +1,27 @@
+// SOME JS BASICS
+
+// template literal, string with backticks.
+let a = "literally"
+let b = 1000
+console.log(`you ${a} are like ${b}`)
+let obj = {
+  foo: 1
+}
+
+obj.bar1 = 1
+obj.bar2 = 2
+obj.bar3 = 3
+
+// this works
+for (let i = 1; i < 4; i++) {
+  console.log(obj[`bar${i}`])
+}
+// this doesn't
+for (let i = 1; i < 4; i++) {
+  console.log(obj.bar+i)
+}
+
+
 // FUNCTIONS
 
 svg.bezierPath = function(pts, t, closed) {
