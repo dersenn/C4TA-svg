@@ -181,6 +181,7 @@ function getControlPoints(p0, p1, p2, t) {
   return [{x: cp1x, y: cp1y}, {x: cp2x, y: cp2y}];
 }
 
+
 // DOM
 
 let dom = {}

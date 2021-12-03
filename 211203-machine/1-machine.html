@@ -28,17 +28,17 @@
 
 
 <!-- the setup and drawing -->
-<script src="2-bezier-blob.js"></script>
+<script src="1-machine.js"></script>
 
 
 <script>
   // use current directory name as title for the site.
   // self executing function.
   (function() {
-      let location = window.location.pathname
-      let path = location.substring(0, location.lastIndexOf("/"))
-      let directoryName = path.substring(path.lastIndexOf("/")+1)
-      document.title = directoryName
+    let location = window.location.pathname
+    let path = location.substring(0, location.lastIndexOf("/"))
+    let directoryName = path.substring(path.lastIndexOf("/")+1)
+    document.title = directoryName
   })();
 
   
