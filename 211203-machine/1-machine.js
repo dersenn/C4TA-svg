@@ -1,26 +1,47 @@
+// SVG ADDONS
+
+svg.pathSoft = function (ia) {
+    ia.unshift(ia[0]);
+    let output = "M ";
+    for (let i = 1; i < ia.length; i++) {
+        output += (ia[i - 1].x + ia[i].x) / 2 * ngn.res + "," + (ia[i - 1].y + ia[i].y) / 2 * ngn.res + " Q";
+        output += ia[i].x * ngn.res + "," + ia[i].y * ngn.res + " ";
+    }
+    output += ia[ia.length - 1].x * ngn.res + "," + ia[ia.length - 1].y * ngn.res + " ";
+    return output;
+};
+
+svg.pathsSoft = function (ia) {
+    let output = "";
+    for (var i = 0; i < ia.length; i++) {
+        output += svg.pathSoft(ia[i]);
+    }
+    return output;
+};
+
 //PHYSICS
 
 let physics = {};
 
 physics.makePoint = function ({ position = { x: 0, y: 0 }, drag = 0.97, acceleration = { x: 0, y: 0 }, id }) {
-    output = {};
-    output.id = id;
-    output.position = position;
-    output.drag = drag;
-    output.acceleration = acceleration;
-    return output;
+  output = {};
+  output.id = id;
+  output.position = position;
+  output.drag = drag;
+  output.acceleration = acceleration;
+  return output;
 };
 
 physics.calculate = function ({ point, force = { x: 0, y: 0 } }) {
-    point.acceleration = { x: point.acceleration.x * point.drag, y: point.acceleration.y * point.drag };
-    point.acceleration = { x: point.acceleration.x + force.x, y: point.acceleration.y + force.y };
-    point.position = { x: point.position.x + point.acceleration.x, y: point.position.y + point.acceleration.y };
+  point.acceleration = { x: point.acceleration.x * point.drag, y: point.acceleration.y * point.drag };
+  point.acceleration = { x: point.acceleration.x + force.x, y: point.acceleration.y + force.y };
+  point.position = { x: point.position.x + point.acceleration.x, y: point.position.y + point.acceleration.y };
 };
 
-physics.verlet = function ({ a, b, distance, stiffness }) {
-
+physics.verlet = function ({ a, b, distance, stiffness, iterations }) {
+  for (let i = 0; i < iterations; i++) {
     let difference = { x: a.position.x - b.position.x, y: a.position.y - b.position.y };
-    let dot = (difference.x * difference.x) + (difference.y * difference.y);
+    let dot = Math.sqrt(difference.x**2 + difference.y**2);
 
     if (dot == 0) dot = 0.001;
 
@@ -29,24 +50,10 @@ physics.verlet = function ({ a, b, distance, stiffness }) {
 
     a.position = { x: a.position.x + move.x, y: a.position.y + move.y };
     b.position = { x: b.position.x - move.x, y: b.position.y - move.y };
+  }
 };
 
-
-
 // SETUP
-
-let simplex = new SimplexNoise();
-
-//make physics dots
-let nDots = 5
-
-let dots = [];
-for (let i = 0; i < nDots; i++) {
-    dots.push(physics.makePoint({ 
-        id: "dot" + i, 
-        position: { x: -50 + Math.random() * ngn.min/2, y: Math.random() * ngn.min }
-    }));
-}
 
 //svg layer
 svg.makeLayer({ 
@@ -55,6 +62,7 @@ svg.makeLayer({
   x: 0, 
   y: 0 
 });
+
 svg.makeLine({ 
   parent: dom.svgLayer, 
   id: "rope", 
@@ -64,58 +72,54 @@ svg.makeLine({
   color: "#fff"
 });
 
-svg.makeLine({ 
-  parent: dom.svgLayer, 
-  id: "circles", 
-  stroke: 4, 
-  color: "#ff0", 
-  cap: "round" 
-});
-
-// my stuff
 svg.makeLine({
   parent: dom.svgLayer,
-  id: "points",
+  id: "ball",
   color: "#f00",
   cap: "round",
-  stroke: 2
+  stroke: 10
 })
 
+//make rope
+let nDots = 3
+let dotDist = ngn.height / nDots
+let forceY = 0
+
+let dots = [];
+for (let i = 0; i < nDots; i++) {
+  if (i == nDots) {
+    forceY = 100
+  }
+  dots.push(physics.makePoint({ 
+    id: "dot" + i, 
+    position: { x: 0, y: -ngn.height/2 + i*dotDist },
+    acceleration: { x: 0, y: forceY }
+  }));
+  // ADD FORCE TO LAST POINT!!!
+}
 
 //LOOP
 
 function loop(time) {
 
-    //circles
-
     let speed = 500;
-    let size = 10;
+    let collect = []
 
-    let noiseX = size * simplex.noise2D(1, size / time)
-    let noiseY = size * simplex.noise2D(size / time, 1)
+    // console.log(dots[dots.length-1])
+    dots[dots.length-1].position.x = 0 + Math.sin(time/speed) * ngn.width/4
 
-// replace noise.. with size, to take it back
-
-    let circleLeft = { position: { x: Math.sin(Math.PI) * noiseY, y: Math.cos(time / speed) * noiseX*4 } };
-    let circleRight = { position: { x: Math.cos(time / speed) * noiseX, y: Math.sin(time / speed) * noiseY*4 } };
-    dom.circles.setAttributeNS(null, "d", svg.paths([[circleLeft.position], [circleRight.position]]));
-
-    //verlet
-    physics.verlet({ a: circleLeft, b: dots[0], distance: 0, stiffness: .5 });
-    for (let i = 0; i < dots.length-1; i++) {
-        physics.verlet({ a: dots[i], b: dots[(i+1)], distance: 1, stiffness: 0.8 });
+    // verlet
+    // physics.verlet({a: dots[0], b: dots[1], distance: dotDist, stiffness: .1, iterations: 1})
+    for (let i = 1; i < dots.length; i++) {
+      physics.verlet({a: dots[i-1], b: dots[i], distance: dotDist, stiffness: .1, iterations: 1})
     }
-    physics.verlet({ a: dots[dots.length-1], b: circleRight, distance: 0, stiffness: 1 });
 
-    let collect = [];
     for (let i = 0; i < dots.length; i++) {
-        let dot = dots[i];
-        physics.calculate({ point: dot, force: { x: 0, y: 0 } });
-        collect.push(dot.position)
+      collect.push(dots[i].position)
     }
-    dom.rope.setAttributeNS(null, "d", svg.path(collect));
-    dom.points.setAttributeNS(null, "d", svg.dots(collect));
 
+    dom.rope.setAttributeNS(null, "d", svg.pathSoft(collect));
+    dom.ball.setAttributeNS(null, "d", svg.dot(collect[collect.length-1]));
 
     requestAnimationFrame(loop);
 };
