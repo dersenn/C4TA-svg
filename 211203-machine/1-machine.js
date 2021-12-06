@@ -38,7 +38,7 @@ physics.verlet = function ({ a, b, distance, stiffness }) {
 let simplex = new SimplexNoise();
 
 //make physics dots
-let nDots = 10
+let nDots = 5
 
 let dots = [];
 for (let i = 0; i < nDots; i++) {
