@@ -77,25 +77,21 @@ svg.makeLine({
   id: "ball",
   color: "#f00",
   cap: "round",
-  stroke: 10
+  stroke: 20
 })
 
 //make rope
-let nDots = 3
-let dotDist = ngn.height / nDots
-let forceY = 0
+let nDots = 5
+let dotDist = 5//ngn.height / nDots
 
 let dots = [];
 for (let i = 0; i < nDots; i++) {
-  if (i == nDots) {
-    forceY = 100
-  }
   dots.push(physics.makePoint({ 
     id: "dot" + i, 
     position: { x: 0, y: -ngn.height/2 + i*dotDist },
-    acceleration: { x: 0, y: forceY }
+    acceleration: { x: 0, y: 0 },
+    drag: 0.9
   }));
-  // ADD FORCE TO LAST POINT!!!
 }
 
 //LOOP
@@ -105,18 +101,21 @@ function loop(time) {
     let speed = 500;
     let collect = []
 
-    // console.log(dots[dots.length-1])
-    dots[dots.length-1].position.x = 0 + Math.sin(time/speed) * ngn.width/4
+    // dots[dots.length-1].position.x = 0 + Math.sin(time/speed) * ngn.width/4
+
 
     // verlet
-    // physics.verlet({a: dots[0], b: dots[1], distance: dotDist, stiffness: .1, iterations: 1})
     for (let i = 1; i < dots.length; i++) {
-      physics.verlet({a: dots[i-1], b: dots[i], distance: dotDist, stiffness: .1, iterations: 1})
+      physics.verlet({a: dots[i-1], b: dots[i], distance: dotDist, stiffness: .1, iterations: 100})
     }
 
     for (let i = 0; i < dots.length; i++) {
+      if (i == dots.length-1) {
+        physics.calculate({ point: dots[i], force: { x: 0, y: .9 } })
+      }
       collect.push(dots[i].position)
     }
+    dots[0].position = {x: 0, y: -ngn.height/2} 
 
     dom.rope.setAttributeNS(null, "d", svg.pathSoft(collect));
     dom.ball.setAttributeNS(null, "d", svg.dot(collect[collect.length-1]));
@@ -125,3 +124,32 @@ function loop(time) {
 };
 
 loop(0);
+
+
+// trying to make ball draggable, adapting from here:
+// https://javascript.info/mouse-drag-and-drop
+dom.ball.onmousedown = function(event) {
+  console.log("ball mousedown")
+
+  function moveBall(pageX, pageY) {
+    dots[dots.length-1].position.x = mapValues(pageX, 0, window.innerWidth, -ngn.width/2, ngn.width/2)
+    dots[dots.length-1].position.y = mapValues(pageY, 0, window.innerHeight, -ngn.height/2, ngn.height/2)
+  }
+  moveBall(event.pageX, event.pageY)
+
+  function onMouseMove(event) {
+    moveBall(event.pageX, event.pageY)
+  }
+  document.addEventListener('mousemove', onMouseMove)
+  document.onmouseup = function() {
+    document.removeEventListener('mousemove', onMouseMove)
+    document.onmouseup = null
+  }
+
+}
+
+
+
+
+
+// my only friend, the end.
