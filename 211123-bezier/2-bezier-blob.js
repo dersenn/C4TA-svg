@@ -25,6 +25,7 @@ for (let i = 1; i < 4; i++) {
 // FUNCTIONS
 
 svg.bezierPath = function(pts, t, closed) {
+  // "t" defines the width of the handles (for smooth curves 0.1—0.9, around .3/.5 looks best.)
   let cp = []
   let n = pts.length
   let output = ""
@@ -53,7 +54,7 @@ svg.bezierPath = function(pts, t, closed) {
         ep.x * ngn.res + "," + ep.y * ngn.res
     }
   } else {
-    // change to quadratic bezier for first and last point. see example.js
+    // need to change to quadratic bezier for first and last point. see example.js
     // so, not quite there yet
     for (let i = 1; i < n; i++) {
       let cp1 = cp[i][1]
