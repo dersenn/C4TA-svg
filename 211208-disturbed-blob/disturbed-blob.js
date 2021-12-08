@@ -1,30 +1,3 @@
-// SOME JS BASICS
-
-// template literal, string with backticks.
-let a = "literally"
-let b = 1000
-console.log(`you ${a} are like ${b}`)
-let obj = {
-  foo: 1
-}
-
-obj.bar1 = 1
-obj.bar2 = 2
-obj.bar3 = 3
-
-// this works
-for (let i = 1; i < 4; i++) {
-  console.log(obj[`bar${i}`])
-}
-// this doesn't
-for (let i = 1; i < 4; i++) {
-  console.log(obj.bar+i)
-}
-
-
-// FUNCTIONS
-
-
 // DRAW
 
 // the blob
@@ -36,16 +9,7 @@ svg.makeShape({
   stroke: .2
 })
 
-// the wierdo
-svg.makeLine({
-  parent: dom.svgLayer,
-  id: "wierdo",
-  color: "#fff",
-  cap: "round",
-  stroke: .2
-})
-
-// the red dots (the points)
+// the red dots
 svg.makeLine({
   parent: dom.svgLayer,
   id: "points",
@@ -59,16 +23,15 @@ svg.makeLine({
 let simplex = new SimplexNoise();
 
 let maxLength = ngn.min/2
-let minLength = maxLength / 3
+let minLength = maxLength/3
 
 let noiseMax = 4 // what's this for again???
 let res = 1
 let speed = 2000
 
-let nPts = 10
+let nPts = 5
 let aStep = -Math.PI*2 / nPts
 
-let edgy
 
 // ANIMATE
 
@@ -89,20 +52,19 @@ function draw(t) {
     points.push(pt)
   }
 
-  // something's not quite right here. last & first point don't line up.
   let xOff = mapValues(Math.cos(t * aStep), -1, 1, 0, 1)
   let yOff = mapValues(Math.sin(t * aStep), -1, 1, 0, 1)
-  edgy = mapValues(simplex.noise3D(xOff * .00000001, yOff * .00000001, t/2000), -1, 1, 0, 2)
 
   dom["points"].setAttributeNS(null, "d", svg.dots(points))
-  // dom["blob"].setAttributeNS(null, "d", svg.bezierPath(points, .4, true))
-  dom["wierdo"].setAttributeNS(null, "d", svg.bezierPath(points, edgy, true))
+  dom["blob"].setAttributeNS(null, "d", svg.bezierPath(points, .4, true))
 
   requestAnimationFrame(draw)
 
 }
 
 draw(0)
+
+
 
 
 
