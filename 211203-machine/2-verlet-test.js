@@ -100,6 +100,7 @@ function loop(time) {
 
   dom.dots.setAttributeNS(null, "d", svg.pathSoft(path));
 
+  // Haha. Ain't no Verlet in here. Tricked ya.
 
 };
 
