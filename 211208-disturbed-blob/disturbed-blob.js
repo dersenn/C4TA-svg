@@ -99,7 +99,6 @@ let prefDist = 0
 
 function draw(t) {
 
-
   // bind pointA to center
   physics.verlet({a: ct, b: ptA, distance: prefDist, stiffness: .01, iterations: 10})
 
