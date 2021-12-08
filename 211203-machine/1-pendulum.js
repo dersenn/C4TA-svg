@@ -103,7 +103,6 @@ function loop(time) {
 
     // dots[dots.length-1].position.x = 0 + Math.sin(time/speed) * ngn.width/4
 
-
     // verlet
     for (let i = 1; i < dots.length; i++) {
       physics.verlet({a: dots[i-1], b: dots[i], distance: dotDist, stiffness: .1, iterations: 100})
