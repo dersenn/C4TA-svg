@@ -51,12 +51,12 @@ function posToArray(ia) {
 
 
 // SETUP
-// let simplex = new SimplexNoise()
+let simplex = new SimplexNoise()
 
 // previous blob stuff
 // let noiseMax = 4 // what's this for again???
 // let res = 1
-// let speed = 2000
+let speed = 2000
 
 // let maxLength = ngn.min/2
 // let minLength = maxLength/3
@@ -99,11 +99,15 @@ let prefDist = 0
 
 function draw(t) {
 
+
   // bind pointA to center
   physics.verlet({a: ct, b: ptA, distance: prefDist, stiffness: .01, iterations: 10})
 
+
+  ptA.position.x = ngn.min/2 * simplex.noise2D(10, t / speed)
+
   // make pointA move (how to make it not move off limits? stay within preferred distance?)
-  physics.calculate({ point: ptA, force: { x: -.01, y: 0 } })
+  // physics.calculate({ point: ptA, force: { x: 0, y: 0 } })
 
 
   //////////// the previous blob start //
@@ -129,9 +133,7 @@ function draw(t) {
   // dom["bluedots"].setAttributeNS(null, "d", svg.dots(posToArray(pts)))
   dom["pointA"].setAttributeNS(null, "d", svg.dot(ptA.position))
 
-
   requestAnimationFrame(draw)
-
 }
 
 draw(0)
