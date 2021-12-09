@@ -1,3 +1,8 @@
+// Info
+// ngn = dein twrk, findet sich in engine.js, aber eigentlich alles identisch.
+// ngn.min ist einfach die kürzere der beiden Seiten (praktisch für quadratisches)
+
+
 // DRAW
 
 drawCenterGrid()
