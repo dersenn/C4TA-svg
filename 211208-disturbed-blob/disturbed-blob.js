@@ -114,7 +114,7 @@ let nPts = 2
 let aStep = -Math.PI*2 / nPts
 
 // the position where the point wants to be (from center)
-let prefDist = 0
+let prefDist = ngn.min/4
 
 
 // the points/notes. connect to center via verlet later.
@@ -155,13 +155,13 @@ function draw(t) {
   let points = []
   for (let p = 0; p < pts.length; p++) {
     let pt = pts[p]
-    physics.verlet({a: {position:{x: 0, y: 0}}, b: pt, distance: prefDist, stiffness: .01, iterations: 10})
+    physics.verlet({a: ct, b: pt, distance: prefDist, stiffness: .01, iterations: 1})
 
     let xOff = mapValues(Math.cos(pt.a), -1, 1, 0, noiseMax)
     let yOff = mapValues(Math.sin(pt.a), -1, 1, 0, noiseMax)
 
-    let wobble = simplex.noise3D(xOff * res, yOff * res, t/speed)
-    pt.r = mapValues(wobble, -1, 1, minLength, maxLength)
+    // let wobble = simplex.noise3D(xOff * res, yOff * res, t/speed)
+    // pt.r = mapValues(wobble, -1, 1, minLength, maxLength)
 
     pt.position = {x: Math.cos(pt.a) * pt.r, y: Math.sin(pt.a) * pt.r}
 
@@ -186,9 +186,10 @@ document.addEventListener("click", function() {
   ptA.position.x += ngn.min/4
   for (let i = 0; i < pts.length; i++) {
     let pt = pts[i]
+    console.log("before: " + pt.position.x)
     pt.position.x += ngn.min/4
     // pt.position = {x: Math.cos(pt.a) * pt.r * 2, y: Math.sin(pt.a) * pt.r * 2}
-    console.log(pt.position)
+    console.log(pt.position.x)
   }
 })
 
