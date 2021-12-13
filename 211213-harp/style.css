@@ -16,3 +16,40 @@ path {
   position: fixed;
   overflow: visible;
 }
+
+
+.controls {
+  position: fixed;
+  width: 100vw;
+  top: 50%;
+  text-align: center;
+  padding: 2em;
+  z-index: 99;
+  transform: translateY(-59%);
+}
+
+.controls button {
+  margin-right: 1em;
+  padding: 1em 2em;
+  border-radius: 2em;
+  border: none;
+  background: #fff;
+  cursor: pointer;
+  box-shadow: 0 0 2em #0f0;
+  transition: all .2s ease-in;
+  opacity: 1;
+}
+
+.controls button.clicked {
+  opacity: 0;
+}
+
+.controls button:hover,
+.controls button:active {
+  background: #0f0;
+  color: #fff;
+}
+
+.controls button:last-child {
+  margin-right: 0;
+}

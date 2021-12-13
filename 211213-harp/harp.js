@@ -1,6 +1,6 @@
 // DRAW
 
-let stroke = .2
+let stroke = .3
 
 // the static
 svg.makeLine({
@@ -32,9 +32,24 @@ svg.makeLine({
 
 // AUDIO / SOUND
 
-// let audioCtx = new(window.AudioContext || window.webkitAudioContext)()
+let audioCtx = new(window.AudioContext || window.webkitAudioContext)()
 
 
+let constantNode = audioCtx.createConstantSource()
+let gainNode1 = audioCtx.createGain()
+let delayNode = audioCtx.createDelay(2)
+
+delayNode.connect(gainNode1)
+
+let osc1 = audioCtx.createOscillator()
+osc1.type = "sine"
+osc1.frequency.value = 36.71
+
+
+constantNode.connect(gainNode1.gain)
+gainNode1.connect(audioCtx.destination)
+osc1.connect(gainNode1)
+osc1.connect(delayNode)
 
 
 // SETUP
@@ -51,14 +66,17 @@ let simplex = new SimplexNoise()
 
 let speed = 2500
 
-let nStrings = 50
+let nStrings = 30
 let strings = []
+
+let offset = ngn.width/nStrings / 2
+
 
 for (let i = 0; i < nStrings; i++) {
   let pts = {
-    ptA: { x: mapValues(i, 0, nStrings, -amp.max, amp.max), y: -ngn.height/2 },
-    ptB: { x: mapValues(i, 0, nStrings, -amp.val, amp.val), y: 0 },
-    ptC: { x: mapValues(i, 0, nStrings, -amp.max, amp.max), y: ngn.height/2 }
+    ptA: { x: offset + mapValues(i, 0, nStrings, -amp.max, amp.max), y: -ngn.height/2 },
+    ptB: { x: offset + mapValues(i, 0, nStrings, -amp.val, amp.val), y: 0 },
+    ptC: { x: offset + mapValues(i, 0, nStrings, -amp.max, amp.max), y: ngn.height/2 }
   }
   strings.push(pts)
 }
@@ -68,17 +86,27 @@ for (let i = 0; i < nStrings; i++) {
 
 function draw(t) {
 
-  let modX = simplex.noise2D(10, t/speed) // Math.sin(t/speed)
-  amp.val = mapValues(modX, -1, 1, amp.min, amp.max)
-
+  // NOISE
+  let modX = simplex.noise2D(10, t/speed)
   let modY = simplex.noise2D(t/speed, 100)
+
+  // SOUND MODULATION
+  let mod = mapValues(modX, -1, 1, 50, 20)
+  osc1.frequency.value = mod
+
+  let pulse = Math.sin(modY/1000)
+  // gainNode1.gain.setValueAtTime(pulse, audioCtx.currentTime)
+
+
+  // SHAPES
+  amp.val = mapValues(modX, -1, 1, amp.min, amp.max)
   amp.y = mapValues(modY, -1, 1, -amp.yMax, amp.yMax)
 
   let static = []
   let path = []
   let dots = []
   for (let i = 0; i < strings.length; i++) {
-    strings[i].ptB.x = mapValues(i, 0, nStrings, -amp.val, amp.val)
+    strings[i].ptB.x = offset + mapValues(i, 0, nStrings, -amp.val, amp.val)
     strings[i].ptB.y = mapValues(i, 0, nStrings, -amp.y, amp.y)
 
     path.push([strings[i].ptA, strings[i].ptB, strings[i].ptC])
@@ -88,23 +116,26 @@ function draw(t) {
 
   // dom["static"].setAttributeNS(null, "d", svg.pathsSoft(static))
   dom["harp"].setAttributeNS(null, "d", svg.pathsSoft(path))
-  dom["dots"].setAttributeNS(null, "d", svg.dots(dots))
+  // dom["dots"].setAttributeNS(null, "d", svg.dots(dots))
 
   requestAnimationFrame(draw)
 }
 
-draw(0)
 
 
 // INTERACTION
 
+const start = document.getElementById("start")
+
 // click event to start audio.
-let audioOn = false
-document.addEventListener("click", function() {
-  if (!audioOn) {
+let play = false
+start.addEventListener("click", function() {
+  if (!play) {
     constantNode.start();
     osc1.start()
-    audioOn = true
+    play = true
+    start.classList.toggle("clicked")
+    draw(0)
   }
 })
 
