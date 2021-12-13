@@ -50,6 +50,17 @@ function posToArray(ia) {
 }
 
 
+// AUDIO / SOUND
+
+let audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+
+let osc1 = audioCtx.createOscillator()
+osc1.type = "sine"
+osc1.frequency.value = 391.995435981749294
+osc1.connect(audioCtx.destination)
+// osc1.start()
+
+
 // SETUP
 let simplex = new SimplexNoise()
 
@@ -103,7 +114,6 @@ function draw(t) {
   physics.verlet({a: ct, b: ptA, distance: prefDist, stiffness: .01, iterations: 10})
 
 
-  ptA.position.x = ngn.min/2 * simplex.noise2D(10, t / speed)
 
   // make pointA move (how to make it not move off limits? stay within preferred distance?)
   // physics.calculate({ point: ptA, force: { x: 0, y: 0 } })
