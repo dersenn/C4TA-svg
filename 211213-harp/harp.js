@@ -1,6 +1,6 @@
 // DRAW
 
-let stroke = .8
+let stroke = .2
 
 // the static
 svg.makeLine({
@@ -49,9 +49,9 @@ let amp = {
 
 let simplex = new SimplexNoise()
 
-let speed = 2000
+let speed = 2500
 
-let nStrings = 40
+let nStrings = 50
 let strings = []
 
 for (let i = 0; i < nStrings; i++) {
@@ -86,9 +86,9 @@ function draw(t) {
     dots.push(strings[i].ptB)
   }
 
-  dom["static"].setAttributeNS(null, "d", svg.pathsSoft(static))
+  // dom["static"].setAttributeNS(null, "d", svg.pathsSoft(static))
   dom["harp"].setAttributeNS(null, "d", svg.pathsSoft(path))
-  // dom["dots"].setAttributeNS(null, "d", svg.dots(dots))
+  dom["dots"].setAttributeNS(null, "d", svg.dots(dots))
 
   requestAnimationFrame(draw)
 }
