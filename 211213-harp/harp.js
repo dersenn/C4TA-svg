@@ -59,7 +59,7 @@ let amp = {
   min: 0,
   val: ngn.width/20,
   yMax: ngn.height/5,
-  y: 20
+  y: 0
 }
 
 let simplex = new SimplexNoise()
@@ -91,11 +91,11 @@ function draw(t) {
   let modY = simplex.noise2D(t/speed, 100)
 
   // SOUND MODULATION
-  let mod = mapValues(modX, -1, 1, 50, 20)
+  let mod = mapValues(modX, -1, 1, 70, 20)
   osc1.frequency.value = mod
 
-  let pulse = Math.sin(modY/1000)
-  // gainNode1.gain.setValueAtTime(pulse, audioCtx.currentTime)
+  let pulse = Math.sin(modY/speed*2)
+  gainNode1.gain.setValueAtTime(pulse, audioCtx.currentTime)
 
 
   // SHAPES
