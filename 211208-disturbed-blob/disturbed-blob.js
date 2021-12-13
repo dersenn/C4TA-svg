@@ -1,13 +1,13 @@
 // DRAW
 
 // the blob
-// svg.makeShape({
-//   parent: dom.svgLayer,
-//   id: "blob",
-//   color: "#0f0",
-//   cap: "round",
-//   stroke: .2
-// })
+svg.makeShape({
+  parent: dom.svgLayer,
+  id: "blob",
+  color: "#0f0",
+  cap: "round",
+  stroke: .2
+})
 
 // the red dots
 // svg.makeLine({
@@ -19,13 +19,13 @@
 // })
 
 // the blue dots
-// svg.makeLine({
-//   parent: dom.svgLayer,
-//   id: "bluedots",
-//   color: "#00f",
-//   cap: "round",
-//   stroke: 1
-// })
+svg.makeLine({
+  parent: dom.svgLayer,
+  id: "bluedots",
+  color: "#00f",
+  cap: "round",
+  stroke: 4
+})
 
 drawCenterGrid()
 
@@ -52,25 +52,47 @@ function posToArray(ia) {
 
 // AUDIO / SOUND
 
-let audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+let audioCtx = new(window.AudioContext || window.webkitAudioContext)()
+
+
+let constantNode = audioCtx.createConstantSource()
+let gainNode1 = audioCtx.createGain()
+let delayNode = audioCtx.createDelay(2)
+
+delayNode.connect(gainNode1)
 
 let osc1 = audioCtx.createOscillator()
 osc1.type = "sine"
 osc1.frequency.value = 391.995435981749294
-osc1.connect(audioCtx.destination)
-// osc1.start()
+
+
+constantNode.connect(gainNode1.gain)
+gainNode1.connect(audioCtx.destination)
+osc1.connect(gainNode1)
+osc1.connect(delayNode)
+
+
+// click event to start audio.
+let audioOn = false
+document.addEventListener("click", function() {
+  if (!audioOn) {
+    constantNode.start();
+    osc1.start()
+    audioOn = true
+  }
+})
 
 
 // SETUP
 let simplex = new SimplexNoise()
 
 // previous blob stuff
-// let noiseMax = 4 // what's this for again???
-// let res = 1
+let noiseMax = .5 // what's this for again???
+let res = 1
 let speed = 2000
 
-// let maxLength = ngn.min/2
-// let minLength = maxLength/3
+let maxLength = ngn.min/4
+let minLength = maxLength/3
 
 
 // the center
@@ -85,61 +107,70 @@ let ptA = physics.makePoint({
   })
 
 
-let nPts = 4
-// let aStep = -Math.PI*2 / nPts
+// let scales = {}
+// scales.dmin = [18.35, 20.60, 21.83, 27.50, 29.14, 32.70] // D, E, F, G, A, Bb, C
+
+let nPts = 2
+let aStep = -Math.PI*2 / nPts
 
 // the position where the point wants to be (from center)
 let prefDist = 0
 
 
-// the verlet connected points. connect to the center.
-// let pts = [];
-// for (let i = 0; i < nPts; i++) {
-//   pts.push(physics.makePoint({ 
-//     id: "pt" + i, 
-//     position: { x: 0, y: -ngn.height/2 + i * 20 },
-//     acceleration: { x: 0, y: 0 },
-//     drag: 0.9
-//   }));
-// }
+// the points/notes. connect to center via verlet later.
+let pts = [];
+for (let i = 0; i < nPts; i++) {
+  let a = i * aStep
+  let r = ngn.min/4
+  pts.push(physics.makePoint({ 
+    id: "pt" + i, 
+    position: { x: Math.cos(a) * r *2, y: Math.sin(a) * r *2},
+    acceleration: { x: 0, y: 0 },
+    drag: 0.9
+  }))
+  pts[i].r = r
+  pts[i].a = a
+}
 
-// console.log(pts)
+console.log(pts)
 
 
 // ANIMATE
 
 function draw(t) {
 
+  // SOUND MODULATION
+  let noise = simplex.noise2D(10,t/1000)
+  let mod = mapValues(noise, -1, 1, -10, 10)
+
+  osc1.frequency.value = mod
+
+  let pulse = Math.sin(t/100)
+  gainNode1.gain.setValueAtTime(mapValues(pulse, -1, 1, 2, 3), audioCtx.currentTime)
+
+
   // bind pointA to center
   physics.verlet({a: ct, b: ptA, distance: prefDist, stiffness: .01, iterations: 10})
 
+  let points = []
+  for (let p = 0; p < pts.length; p++) {
+    let pt = pts[p]
+    physics.verlet({a: {position:{x: 0, y: 0}}, b: pt, distance: prefDist, stiffness: .01, iterations: 10})
+
+    let xOff = mapValues(Math.cos(pt.a), -1, 1, 0, noiseMax)
+    let yOff = mapValues(Math.sin(pt.a), -1, 1, 0, noiseMax)
+
+    let wobble = simplex.noise3D(xOff * res, yOff * res, t/speed)
+    pt.r = mapValues(wobble, -1, 1, minLength, maxLength)
+
+    pt.position = {x: Math.cos(pt.a) * pt.r, y: Math.sin(pt.a) * pt.r}
 
 
-  // make pointA move (how to make it not move off limits? stay within preferred distance?)
-  // physics.calculate({ point: ptA, force: { x: 0, y: 0 } })
+    points.push(pt.position)
+  }
 
-
-  //////////// the previous blob start //
-  // let points = []
-  // for (let p = 0; p < nPts; p++) {
-  //   let a = p * aStep
-
-  //   let xOff = mapValues(Math.cos(a), -1, 1, 0, noiseMax)
-  //   let yOff = mapValues(Math.sin(a), -1, 1, 0, noiseMax)
-    
-  //   let wobble = simplex.noise3D(xOff * res, yOff * res, t/speed)
-  //   let radius = mapValues(wobble, -1, 1, minLength, maxLength)
-
-  //   let pt = {x: Math.cos(a) * radius, y: Math.sin(a) * radius}
-
-  //   points.push(pt)
-  // }
-  // dom["reddots"].setAttributeNS(null, "d", svg.dots(points))
-  // dom["blob"].setAttributeNS(null, "d", svg.bezierPath(points, .4, true))
-  //////////// the previous blob end //
-
-
-  // dom["bluedots"].setAttributeNS(null, "d", svg.dots(posToArray(pts)))
+  dom["blob"].setAttributeNS(null, "d", svg.bezierPath(points, .4, true))
+  dom["bluedots"].setAttributeNS(null, "d", svg.dots(points))
   dom["pointA"].setAttributeNS(null, "d", svg.dot(ptA.position))
 
   requestAnimationFrame(draw)
@@ -151,7 +182,17 @@ draw(0)
 // INTERACTION
 
 document.addEventListener("click", function() {
-  ptA.position.x = ngn.min/2
+  ct.position.x -= ngn.min/4
+  ptA.position.x += ngn.min/4
+  for (let i = 0; i < pts.length; i++) {
+    let pt = pts[i]
+    pt.position.x += ngn.min/4
+    // pt.position = {x: Math.cos(pt.a) * pt.r * 2, y: Math.sin(pt.a) * pt.r * 2}
+    console.log(pt.position)
+  }
 })
+
+
+
 
 // My only friend, the End.

@@ -227,7 +227,7 @@ physics.verlet = function ({ a, b, distance, stiffness, iterations }) {
 
     if (dot == 0) dot = 0.001;
 
-    let scalar = (distance - dot) / dot * stiffness * 0.5;
+    let scalar = (distance - dot) / dot * stiffness * .5;
     let move = { x: difference.x * scalar, y: difference.y * scalar };
 
     a.position = { x: a.position.x + move.x, y: a.position.y + move.y };

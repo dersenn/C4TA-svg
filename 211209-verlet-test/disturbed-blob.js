@@ -45,10 +45,7 @@ function draw(t) {
 
   // bind pointA to center
   physics.verlet({a: ct, b: ptA, distance: prefDist, stiffness: .01, iterations: 10})
-
-  // make pointA move (how to make it not move off limits? stay within preferred distance?)
-  // physics.calculate({ point: ptA, force: { x: 0, y: 0 } })
-
+  //console.log(ptA.position)
 
   dom["pointA"].setAttributeNS(null, "d", svg.dot(ptA.position))
 
@@ -62,10 +59,16 @@ draw(0)
 
 // on click move point to edge, from where it should move back to his desired position.
 document.addEventListener("click", function() {
-  ptA.position.x = ngn.min/2
+  ct.position.x -= ngn.min/2
+  ptA.position.x += ngn.min/2
+  console.log(ct.position.x, ptA.position.x)
 })
 
 
+// document.addEventListener('mousemove', e => {
+//   ct.position.x = (e.clientX - ngn.min/2)/ngn.res;
+//   console.log(ct.position.x,e.clientX)
+// })
 
 
 
