@@ -22,6 +22,14 @@ function getDistance(a, b) {
     return Math.round(Math.sqrt(aa * aa + bb * bb) * 100) / 100;
 }
 
+function posToArray(ia) {
+  let output = []
+  for (let i = 0; i < ia.length; i++) {
+    output.push(ia[i].position)
+  }
+  return output
+}
+
 // MAP VALUES (as in p5.js map())
 function mapValues(val, minIn, maxIn, minOut, maxOut) {
     // first map value from (minIn..maxIn) to (0..1)
