@@ -15,7 +15,7 @@ svg.makeLine({
 svg.makeLine({
   parent: dom.svgLayer,
   id: "harp",
-  color: "#000",
+  color: "#0f0",
   cap: "round",
   stroke: stroke
 })
