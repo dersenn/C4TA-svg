@@ -1,12 +1,13 @@
 // DRAW
 
 let stroke = .3
+let color = "#0f0"
 
 // the static
 svg.makeLine({
   parent: dom.svgLayer,
   id: "static",
-  color: "#000",
+  color: color,
   cap: "round",
   stroke: stroke
 })
@@ -15,7 +16,7 @@ svg.makeLine({
 svg.makeLine({
   parent: dom.svgLayer,
   id: "harp",
-  color: "#0f0",
+  color: color,
   cap: "round",
   stroke: stroke
 })
@@ -114,7 +115,7 @@ function draw(t) {
     dots.push(strings[i].ptB)
   }
 
-  // dom["static"].setAttributeNS(null, "d", svg.pathsSoft(static))
+  dom["static"].setAttributeNS(null, "d", svg.pathsSoft(static))
   dom["harp"].setAttributeNS(null, "d", svg.pathsSoft(path))
   // dom["dots"].setAttributeNS(null, "d", svg.dots(dots))
 
