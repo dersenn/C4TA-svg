@@ -10,6 +10,8 @@
 - [Randomness 1, packing](https://dersenn.github.io/C4TA-svg/211115-randomness-1/packing.html)
 - [Randomness 1, perlin](https://dersenn.github.io/C4TA-svg/211115-randomness-1/perlin.html)
 - [My Engine 1 (?)](https://dersenn.github.io/C4TA-svg/211116-my-engine-1/)
+- [My Engine 1 (?), Vera 1](https://dersenn.github.io/C4TA-svg/211116-my-engine-1/vera1.html)
+- [My Engine 1 (?), Vera 2](https://dersenn.github.io/C4TA-svg/211116-my-engine-1/vera2.html)
 - [Make some noise, Wave](https://dersenn.github.io/C4TA-svg/211121-make-some-noise/1_wave.html)
 - [Make some noise, Fly](https://dersenn.github.io/C4TA-svg/211121-make-some-noise/2_fly.html)
 - [Make some noise, Dandelion](https://dersenn.github.io/C4TA-svg/211121-make-some-noise/3_dandelion.html)
