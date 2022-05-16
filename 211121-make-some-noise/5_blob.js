@@ -28,7 +28,7 @@ let aStep = 2 * Math.PI/nPoints
 // 5 is the max... :-(
 let nBlobs = 5
 
-let maxLength = ngn.width/2
+let maxLength = ngn.min/2
 let amp = 2
 let minLength = maxLength / amp//maxLength - maxLength / amp
 
