@@ -15,7 +15,7 @@ let simplex = new SimplexNoise();
 // SETUP
 
 let nArms = 50
-let maxLength = ngn.width/2
+let maxLength = ngn.min/2
 let minLength = maxLength/2
 
 let aStep = 2 * Math.PI/nArms
