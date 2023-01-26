@@ -120,14 +120,15 @@ let simplex = new SimplexNoise();
 let maxLength = ngn.min/2
 let minLength = maxLength / 3
 
-let noiseMax = 4 // what's this for again???
+let noiseMax = 20 // what's this for again???
 let res = 1
 let speed = 2000
 
-let nPts = 10
+let nPts = 8
 let aStep = -Math.PI*2 / nPts
 
 let edgy
+
 
 // ANIMATE
 
@@ -154,11 +155,10 @@ function draw(t) {
   edgy = mapValues(simplex.noise3D(xOff * .00000001, yOff * .00000001, t/2000), -1, 1, 0, 2)
 
   dom["points"].setAttributeNS(null, "d", svg.dots(points))
-  // dom["blob"].setAttributeNS(null, "d", svg.bezierPath(points, .4, true))
-  dom["wierdo"].setAttributeNS(null, "d", svg.bezierPath(points, edgy, true))
+  dom["blob"].setAttributeNS(null, "d", svg.bezierPath(points, .4, true))
+  // dom["wierdo"].setAttributeNS(null, "d", svg.bezierPath(points, edgy, true))
 
   requestAnimationFrame(draw)
-
 }
 
 draw(0)

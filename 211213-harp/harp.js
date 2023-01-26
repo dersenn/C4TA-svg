@@ -117,7 +117,7 @@ function draw(t) {
 
   dom["static"].setAttributeNS(null, "d", svg.pathsSoft(static))
   dom["harp"].setAttributeNS(null, "d", svg.pathsSoft(path))
-  // dom["dots"].setAttributeNS(null, "d", svg.dots(dots))
+  dom["dots"].setAttributeNS(null, "d", svg.dots(dots))
 
   requestAnimationFrame(draw)
 }
